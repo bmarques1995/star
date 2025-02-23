@@ -5,10 +5,11 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include "DLLDef.hpp"
 
 namespace My
 {
-    class My
+    class MYLANG_API My
     {
     public:
         static void runFile(const std::string& path);
