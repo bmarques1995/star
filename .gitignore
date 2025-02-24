@@ -1,3 +1,8 @@
-*.o
-*.out
-*.pdf
+.vs/
+out/
+[Ww]indows/
+[Ll]inux/
+[Oo]SX/
+dependencies/
+modules/
+*.zip

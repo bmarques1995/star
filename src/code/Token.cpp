@@ -1,5 +1,5 @@
 #include "Token.hpp"
-#include "magic_enum.hpp"
+#include <magic_enum/magic_enum.hpp>
 
 const std::unordered_map<std::type_index, std::function<std::string(std::any)>> My::Token::literalToString =
 {
