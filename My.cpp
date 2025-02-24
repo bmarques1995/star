@@ -28,6 +28,10 @@ void My::My::runFile(const std::string& path)
 
     std::string source(buffer.begin(), buffer.end());
     run(source);
+    if(Debug::hadError)
+    {
+        std::exit(65);
+    }
 }
 
 void My::My::runPrompt()
@@ -45,5 +49,10 @@ void My::My::runPrompt()
 
 void My::My::run(const std::string& source)
 {
-    std::cout << source << std::endl;
+    Scanner scanner(source);
+    std::vector<Token> tokens = scanner.scanTokens();
+    for(auto& token : tokens)
+    {
+        std::cout << token.toString() << std::endl;
+    }
 }

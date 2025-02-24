@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "DLLDef.hpp"
+#include "Scanner.hpp"
 
 namespace My
 {
