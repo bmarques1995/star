@@ -10,19 +10,19 @@
 #include <typeinfo>
 #include <typeindex>
 
-namespace My
+namespace Star
 {
 
-    class MYLANG_API Token
+    class STARLANG_API Token
     {
     public:
         Token(TokenType type, std::string lexeme, std::any literal, uint32_t line);
-        std::string toString();
+        std::string ToString();
 
-        TokenType type;
-        std::string lexeme;
-        std::any literal;
-        uint32_t line;
+        TokenType m_Type;
+        std::string m_Lexeme;
+        std::any m_Literal;
+        uint32_t m_Line;
 
     private:
         static const std::unordered_map<std::type_index, std::function<std::string(std::any)>> literalToString;

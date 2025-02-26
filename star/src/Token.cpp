@@ -1,7 +1,7 @@
 #include "Token.hpp"
 #include <magic_enum/magic_enum.hpp>
 
-const std::unordered_map<std::type_index, std::function<std::string(std::any)>> My::Token::literalToString =
+const std::unordered_map<std::type_index, std::function<std::string(std::any)>> Star::Token::literalToString =
 {
     { 
         std::type_index(typeid(std::string)),
@@ -32,23 +32,23 @@ const std::unordered_map<std::type_index, std::function<std::string(std::any)>> 
     },
 };
 
-My::Token::Token(TokenType type, std::string lexeme, std::any literal, uint32_t line)
-    : type(type), lexeme(lexeme), literal(literal), line(line)
+Star::Token::Token(TokenType type, std::string lexeme, std::any literal, uint32_t line)
+    : m_Type(type), m_Lexeme(lexeme), m_Literal(literal), m_Line(line)
 {
 
 }
 
-std::string My::Token::toString()
+std::string Star::Token::ToString()
 {
-    const std::string typeStr = magic_enum::enum_name(type).data();
+    const std::string typeStr = magic_enum::enum_name(m_Type).data();
     std::stringstream ss_literal;
-    if(literal.has_value())
+    if(m_Literal.has_value())
     {
-        const std::type_index& typeAny = std::type_index(literal.type());
+        const std::type_index& typeAny = std::type_index(m_Literal.type());
         auto it = literalToString.find(typeAny);
         if(it != literalToString.end())
         {
-            ss_literal << it->second(literal);
+            ss_literal << it->second(m_Literal);
         }
         else
         {
@@ -60,5 +60,5 @@ std::string My::Token::toString()
         ss_literal << "[no literal]";
     }
 
-    return typeStr + " " + lexeme + " " + ss_literal.str();
+    return typeStr + " " + m_Lexeme + " " + ss_literal.str();
 }

@@ -4,14 +4,14 @@
 #include <memory>
 #include "DLLDef.hpp"
 
-namespace My
+namespace Star
 {
-    struct MYLANG_API Binary;
-    struct MYLANG_API Grouping;
-    struct MYLANG_API Literal;
-    struct MYLANG_API Unary;
+    struct STARLANG_API Binary;
+    struct STARLANG_API Grouping;
+    struct STARLANG_API Literal;
+    struct STARLANG_API Unary;
 
-    struct MYLANG_API ExprVisitor
+    struct STARLANG_API ExprVisitor
     {
         virtual ~ExprVisitor() = default;
         virtual std::any visitBinaryExpr(std::shared_ptr<Binary> expr) = 0;
@@ -20,9 +20,9 @@ namespace My
         virtual std::any visitUnaryExpr(std::shared_ptr<Unary> expr) = 0;
     };
 
-    struct MYLANG_API Expr
+    struct STARLANG_API Expr
     {
         virtual ~Expr() = default;
-        virtual std::any accept(ExprVisitor& visitor) = 0;
+        virtual std::any Accept(ExprVisitor& visitor) = 0;
     };
 } // namespace My

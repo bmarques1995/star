@@ -8,14 +8,14 @@
 #include "DLLDef.hpp"
 #include "Scanner.hpp"
 
-namespace My
+namespace Star
 {
-    class MYLANG_API My
+    class STARLANG_API Star
     {
     public:
-        static void runFile(const std::string& path);
-        static void runPrompt();
+        static void RunFile(const std::string& path);
+        static void RunPrompt();
     private:
-        static void run(const std::string& source);
+        static void Run(const std::string& source);
     };
 } // namespace My

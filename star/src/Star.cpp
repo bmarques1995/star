@@ -1,8 +1,8 @@
-#include "My.hpp"
+#include "Star.hpp"
 
 namespace fs = std::filesystem;
 
-void My::My::runFile(const std::string& path)
+void Star::Star::RunFile(const std::string& path)
 {
     if(!fs::exists(path))
     {
@@ -27,32 +27,32 @@ void My::My::runFile(const std::string& path)
     }
 
     std::string source(buffer.begin(), buffer.end());
-    run(source);
-    if(Debug::hadError)
+    Run(source);
+    if(Debug::s_HadError)
     {
         std::exit(65);
     }
 }
 
-void My::My::runPrompt()
+void Star::Star::RunPrompt()
 {
     std::string line;
-    std::cout << "my> ";
+    std::cout << "star> ";
     for(;;)
     {
         if(!std::getline(std::cin, line) || line == "exit")
             break;
-        run(line);
-        std::cout << "my> ";
+        Run(line);
+        std::cout << "star> ";
     }
 }
 
-void My::My::run(const std::string& source)
+void Star::Star::Run(const std::string& source)
 {
     Scanner scanner(source);
-    std::vector<Token> tokens = scanner.scanTokens();
+    std::vector<Token> tokens = scanner.ScanTokens();
     for(auto& token : tokens)
     {
-        std::cout << token.toString() << std::endl;
+        std::cout << token.ToString() << std::endl;
     }
 }

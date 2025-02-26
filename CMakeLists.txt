@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.22)
 
-project("Mylang" VERSION 0.0.1)
+project("star" VERSION 0.0.1)
 
 option(BUILD_SHARED_LIBS "Build all libs as .dll/.so" OFF)
 
@@ -25,5 +25,5 @@ include(target_destination)
 include(source_downloader)
 
 # Inclua subprojetos.
-add_subdirectory("src")
+add_subdirectory("star")
 add_subdirectory("launcher")
