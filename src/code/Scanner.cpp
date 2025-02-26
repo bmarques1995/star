@@ -282,6 +282,9 @@ void My::Scanner::number()
             advance();
         }
     }
+
+    std::string value(source.substr(start, current - start));
+    addToken(TokenType::NUMBER, value);
 }
 
 void My::Scanner::identifier()

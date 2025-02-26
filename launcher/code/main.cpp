@@ -1,6 +1,10 @@
 #include <iostream>
 #include "My.hpp"
 
+#define KB(x) x*1024
+#define MB(x) KB(x)*1024
+#define GB(x) MB(x)*1024
+
 int main(int argc, char* argv[])
 {
     if(argc > 2)
