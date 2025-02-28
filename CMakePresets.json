@@ -49,6 +49,7 @@
             "installDir": "${sourceDir}/Linux/Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_PREFIX_PATH": "${sourceDir}/Linux/Debug",
                 "BUILD_SHARED_LIBS":  true
             },
@@ -66,6 +67,7 @@
             "installDir": "${sourceDir}/Linux/Release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_PREFIX_PATH": "${sourceDir}/Linux/Release",
                 "BUILD_SHARED_LIBS":  true
             },

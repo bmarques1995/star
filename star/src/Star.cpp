@@ -51,8 +51,21 @@ void Star::Star::Run(const std::string& source)
 {
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.ScanTokens();
-    for(auto& token : tokens)
+    if (Debug::s_HadError)
     {
-        std::cout << token.ToString() << std::endl;
+        return;
     }
+    
+    Parser parser(tokens);
+    auto expression = parser.Parse();
+
+    if (Debug::s_HadError)
+    {
+        return;
+    }
+    
+    // for(auto& token : tokens)
+    // {
+    //     std::cout << token.ToString() << std::endl;
+    // }
 }

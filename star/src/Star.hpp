@@ -7,6 +7,7 @@
 #include <sstream>
 #include "DLLDef.hpp"
 #include "Scanner.hpp"
+#include "Parser.hpp"
 
 namespace Star
 {

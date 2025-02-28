@@ -5,7 +5,7 @@ const std::unordered_map<std::string, TokenType> Star::Scanner::s_Keywords =
     {"and",    TokenType::AND},
     {"class",  TokenType::CLASS},
     {"else",   TokenType::ELSE},
-    {"false",  TokenType::MY_FALSE},
+    {"false",  TokenType::STAR_FALSE},
     {"for",    TokenType::FOR},
     {"fun",    TokenType::FUN},
     {"if",     TokenType::IF},
@@ -15,7 +15,7 @@ const std::unordered_map<std::string, TokenType> Star::Scanner::s_Keywords =
     {"return", TokenType::RETURN},
     {"super",  TokenType::SUPER},
     {"this",   TokenType::THIS},
-    {"true",   TokenType::MY_TRUE},
+    {"true",   TokenType::STAR_TRUE},
     {"var",    TokenType::VAR},
     {"while",  TokenType::WHILE}
 };
@@ -34,7 +34,7 @@ std::vector<Star::Token> Star::Scanner::ScanTokens()
         ScanToken();
     }
 
-    m_Tokens.emplace_back(Token(TokenType::MY_EOF, "", nullptr, m_Line));
+    m_Tokens.emplace_back(Token(TokenType::STAR_EOF, "", nullptr, m_Line));
     return m_Tokens;
 }
 
@@ -124,7 +124,7 @@ void Star::Scanner::ScanToken()
         }
         case '*':
         {
-            AddToken(TokenType::STAR);
+            AddToken(TokenType::MUL_STAR);
             break;
         }
         case '[':
