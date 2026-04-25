@@ -1,0 +1,32 @@
+{
+    "git": {
+        "location": "https://github.com/Neargye/magic_enum.git",
+        "output_suffix": "magic_enum",
+        "branch": "",
+        "commit": "e046b69a3736d314fad813e159b1c192eaef92cd"
+
+    },
+    "cmake": {
+        "build_system": "default",
+        "relative_root_location": "",
+        "flags": [ "-DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF", "-DMAGIC_ENUM_OPT_BUILD_TESTS=OFF" ],
+        "os_properties": {
+            "windows": {
+                "c_compiler": "cl",
+                "cxx_compiler": "cl"
+            },
+            "linux": {
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            },
+            "macos": {
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            },
+            "freebsd": {
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            }
+        }
+    }
+}

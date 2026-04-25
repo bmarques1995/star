@@ -3,11 +3,15 @@ set(TARGET_NAME star)
 file(GLOB_RECURSE STAR_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
 file(GLOB_RECURSE STAR_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.hpp")
 
+trace_dependency(NAME magic_enum INSTALL_SCRIPT ${PROJECT_SOURCE_DIR}/installers/magic_enum.cmake.json)
+
 add_library(${TARGET_NAME} ${STAR_SRCS} ${STAR_HDRS})
 
 target_include_directories(${TARGET_NAME} PUBLIC #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
                                                  $<INSTALL_INTERFACE:include/star>)
+
+target_link_libraries(${TARGET_NAME} PUBLIC magic_enum::magic_enum)
 
 if(WIN32)
 	if(BUILD_SHARED_LIBS)	

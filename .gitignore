@@ -38,6 +38,7 @@ bld/
 [Ll]inux/
 [Ff]ree[Bb][Ss][Dd]/
 [Mm]ac[Oo][Ss]/
+compile_commands.json
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
