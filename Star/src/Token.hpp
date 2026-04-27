@@ -19,9 +19,9 @@ namespace Star
         TokenType type;
         std::string lexeme;
         std::any literal;
-        uint32_t line;
+        size_t line;
 
-        Token(TokenType type, const std::string& lexeme, const std::any& literal, uint32_t line);
+        Token(TokenType type, const std::string& lexeme, const std::any& literal, size_t line);
         std::string ToString() const;
     private:
         void ProcessLiteral(std::stringstream* ss) const;

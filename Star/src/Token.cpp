@@ -3,7 +3,7 @@
 
 //({ {typeid(std::string), [](std::stringstream* ss, const std::any& value) { *ss << std::any_cast<std::string>(value); }} })
 
-Star::Token::Token(TokenType type, const std::string& lexeme, const std::any& literal, uint32_t line)
+Star::Token::Token(TokenType type, const std::string& lexeme, const std::any& literal, size_t line)
     : type(type), lexeme(lexeme), literal(literal), line(line)
 {
     literalProcessors =

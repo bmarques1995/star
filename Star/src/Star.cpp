@@ -4,7 +4,16 @@ namespace fs = std::filesystem;
 
 void Star::Entrypoint::Run(const std::string& source)
 {
-    std::cout << source << std::endl;
+    Scanner scanner(source);
+    std::vector<Token> tokens = scanner.ScanTokens();
+    for (auto& t : tokens)
+    {
+        std::cout << t.ToString() << "\n";
+    }
+    if(Debug::s_HadError)
+    {
+        std::exit(65);
+    }
 }
 
 void Star::Entrypoint::RunFile(const std::string& filePath)
