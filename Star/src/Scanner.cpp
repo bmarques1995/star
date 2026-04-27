@@ -68,59 +68,59 @@ void Star::Scanner::ScanToken()
 {
     char c = Advance();
     switch (c) {
-    case '(': AddToken(TokenType::LEFT_PAREN); break;
-    case ')': AddToken(TokenType::RIGHT_PAREN); break;
-    case '{': AddToken(TokenType::LEFT_BRACE); break;
-    case '}': AddToken(TokenType::RIGHT_BRACE); break;
-    case ',': AddToken(TokenType::COMMA); break;
-    case '.':
-    {
-        if (IsDigit(PeekNext()))
-            Number();
-        else
-            AddToken(TokenType::DOT); 
-        break; 
-    }
-    case '-': AddToken(TokenType::MINUS); break;
-    case '+': AddToken(TokenType::PLUS); break;
-    case ';': AddToken(TokenType::SEMICOLON); break;
-    case '*': AddToken(TokenType::STAR); break;
-    case '[': AddToken(TokenType::LEFT_BRACKET); break;
-    case ']': AddToken(TokenType::RIGHT_BRACKET); break;
-    case '!':
-        AddToken(Match('=') ? TokenType::BANG_EQUAL : TokenType::BANG); break;
-    case '=':
-        AddToken(Match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL); break;
-    case '<':
-        AddToken(Match('=') ? TokenType::LESS_EQUAL : TokenType::LESS); break;
-    case '>':
-        AddToken(Match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER);
-        break;
-    case '/':
-    {
-        if (Match('/'))
-            while (Peek() != '\n' && !IsAtEnd())
-                Advance();
-        else
-            AddToken(TokenType::SLASH);
-        break;
-    }    
-    case ' ':
-    case '\r':
-    case '\t':
-        break;
-    case '\n':
-        break;
-    case '"':
-        break;
-    default:
-        if (IsDigit(c))
-            Number();
-        else if (IsAlpha(c))
-            Identifier();
-        else
-            Debug::Error(line, "Unexpected character");
-        break;
+        case '(': AddToken(TokenType::LEFT_PAREN); break;
+        case ')': AddToken(TokenType::RIGHT_PAREN); break;
+        case '{': AddToken(TokenType::LEFT_BRACE); break;
+        case '}': AddToken(TokenType::RIGHT_BRACE); break;
+        case ',': AddToken(TokenType::COMMA); break;
+        case '.':
+        {
+            if (IsDigit(PeekNext()))
+                Number();
+            else
+                AddToken(TokenType::DOT); 
+            break; 
+        }
+        case '-': AddToken(TokenType::MINUS); break;
+        case '+': AddToken(TokenType::PLUS); break;
+        case ';': AddToken(TokenType::SEMICOLON); break;
+        case '*': AddToken(TokenType::STAR); break;
+        case '[': AddToken(TokenType::LEFT_BRACKET); break;
+        case ']': AddToken(TokenType::RIGHT_BRACKET); break;
+        case '!':
+            AddToken(Match('=') ? TokenType::BANG_EQUAL : TokenType::BANG); break;
+        case '=':
+            AddToken(Match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL); break;
+        case '<':
+            AddToken(Match('=') ? TokenType::LESS_EQUAL : TokenType::LESS); break;
+        case '>':
+            AddToken(Match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER);
+            break;
+        case '/':
+        {
+            if (Match('/'))
+                while (Peek() != '\n' && !IsAtEnd())
+                    Advance();
+            else
+                AddToken(TokenType::SLASH);
+            break;
+        }    
+        case ' ':
+        case '\r':
+        case '\t':
+            break;
+        case '\n':
+            break;
+        case '"':
+            break;
+        default:
+            if (IsDigit(c))
+                Number();
+            else if (IsAlpha(c))
+                Identifier();
+            else
+                Debug::Error(line, "Unexpected character");
+            break;
     }
 }
 
