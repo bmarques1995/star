@@ -73,7 +73,14 @@ void Star::Scanner::ScanToken()
     case '{': AddToken(TokenType::LEFT_BRACE); break;
     case '}': AddToken(TokenType::RIGHT_BRACE); break;
     case ',': AddToken(TokenType::COMMA); break;
-    case '.': AddToken(TokenType::DOT); break;
+    case '.':
+    {
+        if (IsDigit(PeekNext()))
+            Number();
+        else
+            AddToken(TokenType::DOT); 
+        break; 
+    }
     case '-': AddToken(TokenType::MINUS); break;
     case '+': AddToken(TokenType::PLUS); break;
     case ';': AddToken(TokenType::SEMICOLON); break;
@@ -252,7 +259,10 @@ void Star::Scanner::GetNumberSuffix()
 {
     char c = Peek();
     if(c == 'f')
+    {
+        Advance();
         return; // float
+    }
     if(c == 'i' || c == 'u')
     {
         Advance();
