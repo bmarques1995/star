@@ -39,6 +39,6 @@ target_installation_behaviour(TARGET_NAME ${TARGET_NAME}
                               COMPONENT star)
 deploy_runtime_dependencies(${TARGET_NAME})
 
-if(MODIFY_NAME)
+if(STAR_MODIFY_EXEC_NAME)
     set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME "star")
 endif()

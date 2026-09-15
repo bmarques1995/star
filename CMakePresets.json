@@ -67,7 +67,8 @@
             "displayName": "Linux Release",
             "inherits": "linux-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "STAR_MODIFY_EXEC_NAME": true
             }
         },
         {
@@ -121,7 +122,8 @@
             "displayName": "Windows Release",
             "inherits": "windows-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "STAR_MODIFY_EXEC_NAME": true
             }
         },
         {

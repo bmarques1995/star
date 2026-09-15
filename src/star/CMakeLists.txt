@@ -18,9 +18,7 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRE
 target_link_libraries(${TARGET_NAME} PRIVATE magic_enum::magic_enum
                                          PUBLIC PCRE2::8BIT PCRE2::POSIX fmt::fmt)
 enable_coverage(${TARGET_NAME})
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(${TARGET_NAME} PUBLIC STAR_DEBUG)
-endif()
+target_compile_definitions(${TARGET_NAME} PUBLIC $<$<CONFIG:Debug>:STAR_DEBUG>)
 
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(${TARGET_NAME} PUBLIC STAR_PLATFORM_WINDOWS WIN32_LEAN_AND_MEAN NOMINMAX)

@@ -1,7 +1,6 @@
 #include "Value.hh"
 #include "ValueOperations.hh"
 
-
 star::Value& star::operator-(star::Value& value)
 {
     std::visit(

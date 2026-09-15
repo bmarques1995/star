@@ -6,6 +6,7 @@ option(BUILD_CLI "Build the command line interface" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 option(ENABLE_LLVM_COVERAGE "Enable LLVM source coverage" OFF)
+option(STAR_MODIFY_EXEC_NAME "Enable modify exec name" OFF)
 
 set(STAR_COMPILE_ECOSYS)
 if(MSVC)

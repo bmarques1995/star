@@ -11,7 +11,7 @@
 
 namespace star
 {
-	struct Callable;
+	class Callable;
 	enum class VariableType
 	{
 		Null,
