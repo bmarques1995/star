@@ -18,6 +18,12 @@ endif()
 add_executable(${TARGET_NAME} ${REPL_SOURCES})
 target_link_libraries(${TARGET_NAME} PRIVATE star star_cli)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(STAR_COMPILE_ECOSYS MATCHES "llvm")
+        enable_llvm_memory_debug(${TARGET_NAME})
+    endif()
+endif()
+
 set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
 set_artifacts_dir(${TARGET_NAME} ${PROJECT_BINARY_DIR})
 set_msvc_target_utf8(${TARGET_NAME})

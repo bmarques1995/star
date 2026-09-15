@@ -21,6 +21,6 @@ namespace star
 
     private:
         std::shared_ptr<Statement::Function> m_Declaration;
-		std::shared_ptr<Environment> m_Chaining;
+        std::weak_ptr<Environment> m_Chaining;
     };
 }

@@ -19,7 +19,10 @@
             "args": [
                 "samples/func.st"
             ],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "ASAN_OPTIONS": "detect_leaks=0"
+            }
         },
         {
             "type": "lldb-dap",

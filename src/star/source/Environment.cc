@@ -1,11 +1,11 @@
 #include "Environment.hh"
 #include "RuntimeError.hh"
 star::Environment::Environment() :
-	m_Parent(nullptr)
+	m_Parent()
 {
 }
 
-star::Environment::Environment(std::shared_ptr<Environment> parent) :
+star::Environment::Environment(std::weak_ptr<Environment> parent) :
 	m_Parent(parent)
 {
 }
@@ -25,10 +25,13 @@ void star::Environment::Reassign(const Token& name, Value value)
 	auto it = m_Values.find(name.GetLexeme());
 	if (it == m_Values.end())
 	{
-		if (m_Parent != nullptr)
-			m_Parent->Reassign(name, value);
+		auto tempParent = m_Parent.lock();
+		if (tempParent != nullptr)
+			tempParent->Reassign(name, value);
 		else
+		{
 			throw RuntimeError(name, "Cannot reassign undefined variable: '" + name.GetLexeme() + "'.");
+		}
 		return;
 	}
 	if(it->second.GetType() != VariableType::Dynamic && it->second.GetType() != value.GetAssignedType())
@@ -44,12 +47,13 @@ void star::Environment::Reassign(const Token& name, Value value)
 
 star::Value star::Environment::Get(const Token& name) 
 {
+	auto tempParent = m_Parent.lock();
 	auto elem = m_Values.find(name.GetLexeme());
 	if (elem != m_Values.end()) {
 		return elem->second;
 	}
-	if (m_Parent != nullptr) {
-		return m_Parent->Get(name);
+	if (tempParent != nullptr) {
+		return tempParent->Get(name);
 	}
 	throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
 }
