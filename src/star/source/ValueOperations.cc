@@ -91,6 +91,60 @@ star::Value& star::operator%(star::Value& value1, const star::Value& value2)
     return value1;
 }
 
+star::Value& star::operator++(star::Value& value)
+{
+    std::visit(
+        [](auto& lhs) -> void
+        {
+            using T = std::decay_t<decltype(lhs)>;
+            value_helper::Increment(lhs);
+        },
+        value.GetLValue()
+    );
+	return value;
+}
+
+star::Value& star::operator--(star::Value& value)
+{
+    std::visit(
+        [](auto& lhs) -> void
+        {
+            using T = std::decay_t<decltype(lhs)>;
+            value_helper::Decrement(lhs);
+        },
+        value.GetLValue()
+    );
+    return value;
+}
+
+star::Value star::operator++(star::Value& value, int differ)
+{
+    Value result = value;
+    std::visit(
+        [](auto& lhs) -> void
+        {
+            using T = std::decay_t<decltype(lhs)>;
+            value_helper::Increment(lhs);
+        },
+        value.GetLValue()
+    );
+	return result;
+}
+
+star::Value star::operator--(star::Value& value, int differ)
+{
+    Value result = value;
+    std::visit(
+        [](auto& lhs) -> void
+        {
+            using T = std::decay_t<decltype(lhs)>;
+            value_helper::Decrement(lhs);
+        },
+        value.GetLValue()
+    );
+    return result;
+}
+
 bool star::operator==(const star::Value& value1,
                       const star::Value& value2)
 {

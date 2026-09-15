@@ -21,5 +21,6 @@ namespace star
 		void Define(const Token& name, Value value);
 		void Reassign(const Token& name, Value value);
 		Value Get(const Token& name);
+		Value* GetAsPtr(const Token& name);
 	};
 }

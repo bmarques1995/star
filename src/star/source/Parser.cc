@@ -120,6 +120,12 @@ std::shared_ptr<star::Expression::Expr> star::Parser::Unary()
         std::shared_ptr<Expression::Expr> right = Unary();
         return std::make_shared<star::Expression::Unary>(oper, right);
     }
+    if (Match(TokenType::INCREMENT, TokenType::DECREMENT))
+    {
+		Token oper = Previous();
+        Token name = Consume(TokenType::IDENTIFIER, "Expected variable name.");
+		return std::make_shared<star::Expression::PreIncrement>(oper, name, std::make_shared<star::Expression::Variable>(name));
+    }
     //return Primary();
 	return Call();
 }
@@ -301,6 +307,13 @@ std::shared_ptr<star::Expression::Expr> star::Parser::Call()
 	{
 		expr = FinishCall(expr);
 	}
+
+    Token name = Previous();
+    if (Match(TokenType::INCREMENT, TokenType::DECREMENT))
+    {
+        Token oper = Previous();
+        expr = std::make_shared<star::Expression::PostIncrement>(name, oper, std::make_shared<star::Expression::Variable>(name));
+    }
 	return expr;
 }
 

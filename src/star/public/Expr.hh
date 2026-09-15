@@ -56,6 +56,28 @@ namespace star
             Value Accept(ExprVisitor& visitor) override;
         };
 
+        struct STAR_API PreIncrement final : public Expr, public std::enable_shared_from_this<PreIncrement>
+        {
+            Token m_Operator;
+            Token m_Name;
+            std::shared_ptr<Expr> m_Right;
+
+			PreIncrement(Token oper, Token name, std::shared_ptr<Expr> right);
+			~PreIncrement() = default;
+			Value Accept(ExprVisitor& visitor) override;
+        };
+
+        struct STAR_API PostIncrement final : public Expr, public std::enable_shared_from_this<PostIncrement>
+        {
+            Token m_Operator;
+            Token m_Name;
+            std::shared_ptr<Expr> m_Left;
+
+            PostIncrement(Token name, Token oper, std::shared_ptr<Expr> left);
+            ~PostIncrement() = default;
+            Value Accept(ExprVisitor& visitor) override;
+        };
+
         struct STAR_API Binary final : public Expr, public std::enable_shared_from_this<Binary>
         {
             std::shared_ptr<Expr> m_Left;

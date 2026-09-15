@@ -57,3 +57,16 @@ star::Value star::Environment::Get(const Token& name)
 	}
 	throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
 }
+
+star::Value* star::Environment::GetAsPtr(const Token& name)
+{
+	auto tempParent = m_Parent.lock();
+	auto elem = m_Values.find(name.GetLexeme());
+	if (elem != m_Values.end()) {
+		return &m_Values.at(name.GetLexeme());
+	}
+	if (tempParent != nullptr) {
+		return tempParent->GetAsPtr(name);
+	}
+	throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
+}

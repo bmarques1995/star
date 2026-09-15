@@ -113,6 +113,18 @@ bool star::Value::IsNumber() const
     );
 }
 
+bool star::Value::IsInteger() const
+{
+    return std::visit(
+        [](const auto& value)
+        {
+            using T = std::decay_t<decltype(value)>;
+            return std::is_integral_v<T> && !std::is_same_v<T, bool>;
+        },
+        m_Value
+    );
+}
+
 star::VariableType star::Value::GetType() const
 {
     return m_Type;

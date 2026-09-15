@@ -42,6 +42,8 @@ namespace star
         void MultiAdvance(size_t offset);
         void AdvanceAndCommit(size_t offset);
         void CommitAdvance();
+        void ProcessPlus();
+        void ProcessMinus();
 
         void AddToken(TokenType type, const std::string& lexeme = "");
 

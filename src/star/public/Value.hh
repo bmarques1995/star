@@ -96,6 +96,7 @@ namespace star
 		const Storage& GetRValue() const;
 		bool IsInitialized() const;
 		bool IsNumber() const;
+		bool IsInteger() const;
 
 		VariableType GetType() const;
 		VariableType GetAssignedType() const;
@@ -127,6 +128,10 @@ namespace star
 	star::Value& operator*(star::Value& value1, const star::Value& value2);
 	star::Value& operator/(star::Value& value1, const star::Value& value2);
 	star::Value& operator%(star::Value& value1, const star::Value& value2);
+	star::Value& operator++(star::Value& value);
+	star::Value& operator--(star::Value& value);
+	star::Value operator++(star::Value& value, int differ);
+	star::Value operator--(star::Value& value, int differ);
 	bool operator==(const star::Value& value1, const star::Value& value2);
 	bool operator<(const star::Value& value1, const star::Value& value2);
 	bool operator<=(const star::Value& value1, const star::Value& value2);

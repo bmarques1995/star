@@ -41,6 +41,28 @@ star::Value star::Expression::Unary::Accept(star::Expression::ExprVisitor& visit
     return visitor.VisitUnaryExpr(shared_from_this());
 }
 
+star::Expression::PreIncrement::PreIncrement(Token oper, Token name, std::shared_ptr<Expr> right) :
+	m_Operator{std::move(oper)}, m_Name{std::move(name)}, m_Right{std::move(right)}
+{
+
+}
+
+star::Value star::Expression::PreIncrement::Accept(star::Expression::ExprVisitor& visitor)
+{
+	return visitor.VisitPreIncrementExpr(shared_from_this());
+}
+
+star::Expression::PostIncrement::PostIncrement(Token name, Token oper, std::shared_ptr<Expr> left) :
+    m_Operator{ std::move(oper) }, m_Name{ std::move(name) }, m_Left{ std::move(left) }
+{
+
+}
+
+star::Value star::Expression::PostIncrement::Accept(star::Expression::ExprVisitor& visitor)
+{
+    return visitor.VisitPostIncrementExpr(shared_from_this());
+}
+
 star::Expression::Binary::Binary(std::shared_ptr<Expr> left, Token oper, std::shared_ptr<Expr> right) : 
     m_Left{std::move(left)}, m_Operator{std::move(oper)}, m_Right{std::move(right)}
 {

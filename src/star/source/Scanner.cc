@@ -120,8 +120,8 @@ void star::Scanner::ScanToken()
                 AddToken(TokenType::DOT);
             }
             break;
-        case '-': AddToken(Match('=') ? TokenType::REC_MINUS : TokenType::MINUS); break;
-        case '+': AddToken(Match('=') ? TokenType::REC_PLUS : TokenType::PLUS); break;
+        case '-': ProcessMinus(); break;
+        case '+': ProcessPlus(); break;
         case ';': AddToken(TokenType::SEMICOLON); break;
         case '*': AddToken(Match('=') ? TokenType::REC_STAR : TokenType::STAR); break;
         case '%': AddToken(Match('=') ? TokenType::REC_MOD : TokenType::MOD); break;
@@ -179,6 +179,44 @@ void star::Scanner::CommitAdvance()
     if(m_Current >= m_Source.length())
         m_Start = m_Source.length() - 1;
     m_Start = m_Current;
+}
+
+void star::Scanner::ProcessPlus()
+{
+    if (Match('='))
+    {
+        AddToken(TokenType::REC_PLUS);
+        return;
+    }
+    else if (Match('+'))
+    {
+        AddToken(TokenType::INCREMENT);
+        return;
+    }
+    else
+    {
+        AddToken(TokenType::PLUS);
+        return;
+    }
+}
+
+void star::Scanner::ProcessMinus()
+{
+    if (Match('=')) 
+    {
+        AddToken(TokenType::REC_MINUS);
+		return;
+    }
+    else if (Match('-'))
+	{
+        AddToken(TokenType::DECREMENT);
+		return;
+	}
+    else
+    {
+        AddToken(TokenType::MINUS);
+        return;
+    }
 }
 
 void star::Scanner::AddToken(TokenType type, const std::string& lexeme)

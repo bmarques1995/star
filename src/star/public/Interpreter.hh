@@ -24,6 +24,8 @@ namespace star
 		Value VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr) override;
 		Value VisitTemplateLiteralExpr(std::shared_ptr<Expression::TemplateLiteral> expr) override;
 		Value VisitUnaryExpr(std::shared_ptr<Expression::Unary> expr) override;
+		Value VisitPreIncrementExpr(std::shared_ptr<Expression::PreIncrement> expr) override;
+		Value VisitPostIncrementExpr(std::shared_ptr<Expression::PostIncrement> expr) override;
 		Value VisitBinaryExpr(std::shared_ptr<Expression::Binary> expr) override;
 		Value VisitTernaryExpr(std::shared_ptr<Expression::Ternary> expr) override;
 		Value VisitVariableExpr(std::shared_ptr<Expression::Variable> expr) override;
@@ -51,6 +53,7 @@ namespace star
 	protected:
 		void CheckNumberOperand(const Token& oper, const Value& operand);
 		void CheckNumberOperands(const Token& oper, const Value& left, const Value& right);
+		void CheckIntegerOperand(const Token& oper, const Value& operand);
 		bool IsTruthy(const Value& object);
 		bool IsEqual(const Value& a, const Value& b);
 		std::string Stringify(const Value& object, const std::string& format);

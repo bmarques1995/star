@@ -90,5 +90,31 @@ namespace star
                 throw InvalidOperation("You can only get module of integers");
             }
         }
+
+        template<typename T1>
+        void Increment(T1& lhs)
+        {
+            if constexpr (std::is_integral_v<T1> && !std::is_same_v<T1, bool>)
+            {
+                ++lhs;
+            }
+            else
+            {
+                throw InvalidOperation("You can only increment integers");
+            }
+        }
+
+		template<typename T1>
+		void Decrement(T1& lhs)
+		{
+			if constexpr (std::is_integral_v<T1> && !std::is_same_v<T1, bool>)
+			{
+				--lhs;
+			}
+			else
+			{
+				throw InvalidOperation("You can only decrement integers");
+			}
+		}
     }
 }

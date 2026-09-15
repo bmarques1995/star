@@ -66,6 +66,38 @@ star::Value star::Interpreter::VisitUnaryExpr(std::shared_ptr<Expression::Unary>
     }
 }
 
+star::Value star::Interpreter::VisitPreIncrementExpr(std::shared_ptr<Expression::PreIncrement> expr)
+{
+    Value* right = m_CurrentEnv->GetAsPtr(expr->m_Name);
+    switch (expr->m_Operator.GetTokenType())
+    {
+    case TokenType::INCREMENT:
+        CheckIntegerOperand(expr->m_Operator, *right);
+        return ++(*right);
+    case TokenType::DECREMENT:
+        CheckIntegerOperand(expr->m_Operator, *right);
+        return --(*right);
+    default:
+        return { TokenType::NIL, "" };
+    }
+}
+
+star::Value star::Interpreter::VisitPostIncrementExpr(std::shared_ptr<Expression::PostIncrement> expr)
+{
+    Value* right = m_CurrentEnv->GetAsPtr(expr->m_Name);
+    switch (expr->m_Operator.GetTokenType())
+    {
+    case TokenType::INCREMENT:
+        CheckIntegerOperand(expr->m_Operator, *right);
+        return (*right)++;
+    case TokenType::DECREMENT:
+        CheckIntegerOperand(expr->m_Operator, *right);
+        return (*right)--;
+    default:
+        return { TokenType::NIL, "" };
+    }
+}
+
 star::Value star::Interpreter::VisitBinaryExpr(std::shared_ptr<Expression::Binary> expr)
 {
     Value left = Evaluate(expr->m_Left);
@@ -218,6 +250,12 @@ void star::Interpreter::CheckNumberOperands(const Token& oper, const Value& left
 {
     if(left.IsNumber() && right.IsNumber()) return;
     throw RuntimeError{oper, "Operand must be a number."};
+}
+
+void star::Interpreter::CheckIntegerOperand(const Token& oper, const Value& operand)
+{
+	if(operand.IsInteger()) return;
+	throw RuntimeError{oper, "Operand must be an integer."};
 }
 
 bool star::Interpreter::IsEqual(const Value& a, const Value& b)

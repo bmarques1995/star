@@ -11,6 +11,8 @@ namespace star
         struct Literal;
         struct TemplateLiteral;
         struct Unary;
+        struct PreIncrement;
+        struct PostIncrement;
         struct Binary;
         struct Ternary;
         struct Variable;
@@ -24,6 +26,8 @@ namespace star
             virtual Value VisitLiteralExpr(std::shared_ptr<Literal> expr) = 0;
             virtual Value VisitTemplateLiteralExpr(std::shared_ptr<TemplateLiteral> expr) = 0;
             virtual Value VisitUnaryExpr(std::shared_ptr<Unary> expr) = 0;
+            virtual Value VisitPreIncrementExpr(std::shared_ptr<PreIncrement> expr) = 0;
+            virtual Value VisitPostIncrementExpr(std::shared_ptr<PostIncrement> expr) = 0;
             virtual Value VisitBinaryExpr(std::shared_ptr<Binary> expr) = 0;
             virtual Value VisitTernaryExpr(std::shared_ptr<Ternary> expr) = 0;
             virtual Value VisitVariableExpr(std::shared_ptr<Variable> expr) = 0;
