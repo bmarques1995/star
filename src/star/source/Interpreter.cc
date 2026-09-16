@@ -11,8 +11,9 @@
 
 star::Interpreter::Interpreter()
 {
-	m_CurrentEnv.reset(new Environment());
-	m_CurrentEnv->Define(Token{ TokenType::FUN, "escape", 1, 1, "::native" }, Value{ std::make_shared<Escape>() });
+	m_Global.reset(new Environment());
+    m_Global->Define(Token{ TokenType::FUN, "escape", 1, 1, "::native" }, Value{ std::make_shared<Escape>() });
+    m_CurrentEnv = m_Global;
 }
 
 star::Value star::Interpreter::VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr)
@@ -68,7 +69,7 @@ star::Value star::Interpreter::VisitUnaryExpr(std::shared_ptr<Expression::Unary>
 
 star::Value star::Interpreter::VisitPreIncrementExpr(std::shared_ptr<Expression::PreIncrement> expr)
 {
-    Value* right = m_CurrentEnv->GetAsPtr(expr->m_Name);
+    Value* right = LookupVariablePtr(expr->m_Name, expr->m_Right);
     switch (expr->m_Operator.GetTokenType())
     {
     case TokenType::INCREMENT:
@@ -84,7 +85,7 @@ star::Value star::Interpreter::VisitPreIncrementExpr(std::shared_ptr<Expression:
 
 star::Value star::Interpreter::VisitPostIncrementExpr(std::shared_ptr<Expression::PostIncrement> expr)
 {
-    Value* right = m_CurrentEnv->GetAsPtr(expr->m_Name);
+    Value* right = LookupVariablePtr(expr->m_Name, expr->m_Left);
     switch (expr->m_Operator.GetTokenType())
     {
     case TokenType::INCREMENT:
@@ -171,18 +172,31 @@ star::Value star::Interpreter::VisitTernaryExpr(std::shared_ptr<Expression::Tern
 
 star::Value star::Interpreter::VisitVariableExpr(std::shared_ptr<Expression::Variable> expr)
 {
-    Value value = m_CurrentEnv->Get(expr->m_Name);
+    Value value = m_CurrentEnv.lock()->Get(expr->m_Name);
     if (value.GetType() == VariableType::Null)
     {
         throw RuntimeError(expr->m_Name, "Variable not initialized.");
     }
-    return m_CurrentEnv->Get(expr->m_Name);
+    return m_CurrentEnv.lock()->Get(expr->m_Name);
 }
 
 star::Value star::Interpreter::VisitAssignmentExpr(std::shared_ptr<Expression::Assignment> expr)
 {
+    /*
     Value value = Evaluate(expr->m_Value);
-    m_CurrentEnv->Reassign(expr->m_Name, value);
+    m_CurrentEnv.lock()->Reassign(expr->m_Name, value);
+    return value;*/
+    Value value = Evaluate(expr->m_Value);
+    auto elem = locals.find(expr);
+    if (elem != locals.end())
+    {
+        size_t distance = elem->second;
+        m_CurrentEnv.lock()->ReassignAt(expr->m_Name, value, distance);
+    }
+    else
+    {
+        m_Global->Reassign(expr->m_Name, value);
+    }
     return value;
 }
 
@@ -273,6 +287,34 @@ star::Value star::Interpreter::Evaluate(std::shared_ptr<Expression::Expr> expr)
     return expr->Accept(*this);
 }
 
+star::Value star::Interpreter::LookupVariable(const Token& name, std::shared_ptr<Expression::Expr> expr)
+{
+    auto elem = locals.find(expr);
+    if (elem != locals.end())
+	{
+		size_t distance = elem->second;
+	    return m_CurrentEnv.lock()->GetAt(name, distance);
+    }
+	else
+    {
+        return m_Global->Get(name);
+    }
+}
+
+star::Value* star::Interpreter::LookupVariablePtr(const Token& name, std::shared_ptr<Expression::Expr> expr)
+{
+    auto elem = locals.find(expr);
+    if (elem != locals.end())
+    {
+        size_t distance = elem->second;
+        return m_CurrentEnv.lock()->GetAsPtrAt(name, distance);
+    }
+    else
+    {
+        return m_Global->GetAsPtr(name);
+    }
+}
+
 star::Value star::Interpreter::Interpret(std::shared_ptr<Expression::Expr> expr)
 {
     return Evaluate(expr);
@@ -298,7 +340,7 @@ void star::Interpreter::ExecuteBlock
     std::shared_ptr<Environment> environment
 )
 {
-	std::shared_ptr<Environment> previous = m_CurrentEnv;
+	std::weak_ptr<Environment> previous = m_CurrentEnv;
     m_CurrentEnv = environment;
     try
     {
@@ -330,14 +372,14 @@ star::Value star::Interpreter::VisitVariableStmt(std::shared_ptr<Statement::Vari
         {
             if(stmt->m_LockType)
 				value.LockType();
-            m_CurrentEnv->Define(stmt->m_Name, std::move(value));
+            m_CurrentEnv.lock()->Define(stmt->m_Name, std::move(value));
         }
         else
         {
             value.LockType();
             if(stmt->ExpectedType() != value.GetType())
                 throw RuntimeError(stmt->m_Name, "Variable type mismatch.");
-			m_CurrentEnv->Define(stmt->m_Name, std::move(value));
+			m_CurrentEnv.lock()->Define(stmt->m_Name, std::move(value));
         }
     }
     
@@ -375,7 +417,7 @@ star::Value star::Interpreter::VisitWhileStmt(std::shared_ptr<Statement::While> 
 star::Value star::Interpreter::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
 {
     auto function = std::make_shared<Function>(stmt, m_CurrentEnv);
-    m_CurrentEnv->Define(stmt->m_Name, { function });
+    m_CurrentEnv.lock()->Define(stmt->m_Name, { function });
     return { TokenType::NIL, "" };
 }
 
@@ -395,5 +437,5 @@ star::Value star::Interpreter::VisitReturnStmt(std::shared_ptr<Statement::Return
 
 void star::Interpreter::RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable)
 {
-    m_CurrentEnv->Define(Token{ TokenType::FUN, name, 1, 1, "::native" }, { callable });
+    m_CurrentEnv.lock()->Define(Token{ TokenType::FUN, name, 1, 1, "::native" }, { callable });
 }

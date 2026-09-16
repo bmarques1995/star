@@ -70,3 +70,60 @@ star::Value* star::Environment::GetAsPtr(const Token& name)
 	}
 	throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
 }
+
+void star::Environment::ReassignAt(const Token& name, Value value, size_t distance)
+{
+
+}
+
+star::Value star::Environment::GetAt(const Token& name, size_t distance)
+{
+	auto desiredEnv = Anchestor(distance);
+	std::shared_ptr<Environment> tempParent;
+	try
+	{
+		TempUnlock(&tempParent, &desiredEnv);
+	}
+	catch (const std::exception& e)
+	{
+		throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
+	}
+	return tempParent->Get(name);
+}
+
+star::Value* star::Environment::GetAsPtrAt(const Token& name, size_t distance)
+{
+	auto desiredEnv = Anchestor(distance);
+	std::shared_ptr<Environment> tempParent;
+	try
+	{
+		TempUnlock(&tempParent, &desiredEnv);
+	}
+	catch (const std::exception& e)
+	{
+		throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
+	}
+	return tempParent->GetAsPtr(name);
+}
+
+std::weak_ptr<star::Environment> star::Environment::Anchestor(size_t distance)
+{
+	std::weak_ptr<Environment> tempParent = m_Parent;
+	for (size_t i = 0; i < distance; i++)
+	{
+		tempParent = !tempParent.expired() ? tempParent.lock()->m_Parent : std::weak_ptr<Environment>(); //!tempParent.expired()
+	}
+	return tempParent;
+}
+
+void star::Environment::TempUnlock(std::shared_ptr<Environment>* dest, std::weak_ptr<Environment>* src)
+{
+	if (src->expired())
+	{
+		throw std::exception("Undefined scope ");
+	}
+	else
+	{
+		*dest = src->lock();
+	}
+}

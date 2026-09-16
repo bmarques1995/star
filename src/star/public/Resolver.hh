@@ -1,26 +1,41 @@
 #pragma once
 
+
 #include "StarMacro.hh"
 #include "Token.hh"
-#include "Expr.hh"
-#include "Stmt.hh"
-#include "Visitor.hh"
-#include "Environment.hh"
+#include "Value.hh"
+#include "Interpreter.hh"
 #include <memory>
 #include <vector>
-#include "Function.hh"
+#include <map>
+#include "FunctionType.hh"
 
 namespace star
 {
-	struct Returner
+	class STAR_API Resolver : public Expression::ExprVisitor, public Statement::StmtVisitor
 	{
-		Value value;
-	};
+	private:
+		Interpreter& interpreter;
+		std::vector<std::map<std::string, bool>> scopes;
+		std::vector<std::map<Token, size_t>> identifiers;
+		FunctionType m_CurrentFunctionType;
 
-	class STAR_API Interpreter : public Expression::ExprVisitor, Statement::StmtVisitor
-	{
-		friend class Function;
+		void Resolve(std::shared_ptr<Statement::Stmt> statement);
+		void Resolve(std::shared_ptr<Expression::Expr> expression);
+
+		void ResolveLocal(std::shared_ptr<Expression::Expr> expression, Token& name);
+		void ResolveFunction(std::vector<Statement::FunctionArgument> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
+
+		void BeginScope();
+		void EndScope();
+
+		void Declare(Token& name);
+		void Define(Token& name);
+	
 	public:
+		Resolver(Interpreter& interpreter);
+		void Resolve(std::vector<Statement::FunctionArgument> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
+
 		Value VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr) override;
 		Value VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr) override;
 		Value VisitTemplateLiteralExpr(std::shared_ptr<Expression::TemplateLiteral> expr) override;
@@ -33,14 +48,6 @@ namespace star
 		Value VisitAssignmentExpr(std::shared_ptr<Expression::Assignment> expr) override;
 		Value VisitLogicalExpr(std::shared_ptr<Expression::Logical> expr) override;
 		Value VisitCallExpr(std::shared_ptr<Expression::Call> expr) override;
-		
-		Interpreter();
-		virtual ~Interpreter() = default;
-
-		Value Interpret(std::shared_ptr<Expression::Expr> expr);
-		Value Interpret(std::vector<std::shared_ptr<Statement::Stmt>>& statements);
-		Value ExecuteStmt(std::shared_ptr<Statement::Stmt> statement);
-		void ExecuteBlock(const std::vector<std::shared_ptr<Statement::Stmt>>& statements, std::shared_ptr<Environment> environment);
 
 		Value VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt) override;
 		Value VisitVariableStmt(std::shared_ptr<Statement::Variable> stmt) override;
@@ -50,23 +57,5 @@ namespace star
 		Value VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt) override;
 		Value VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt) override;
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;
-
-		void RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable);
-
-	protected:
-		void CheckNumberOperand(const Token& oper, const Value& operand);
-		void CheckNumberOperands(const Token& oper, const Value& left, const Value& right);
-		void CheckIntegerOperand(const Token& oper, const Value& operand);
-		bool IsTruthy(const Value& object);
-		bool IsEqual(const Value& a, const Value& b);
-		std::string Stringify(const Value& object, const std::string& format);
-		Value Evaluate(std::shared_ptr<Expression::Expr> expr);
-		Value LookupVariable(const Token& name, std::shared_ptr<Expression::Expr> expr);
-		Value* LookupVariablePtr(const Token& name, std::shared_ptr<Expression::Expr> expr);
-
-		std::unordered_map<std::shared_ptr<Expression::Expr>, size_t> locals;
-		std::weak_ptr<Environment> m_CurrentEnv;
-		std::shared_ptr<Environment> m_Global;
 	};
-
 }

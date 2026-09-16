@@ -19,7 +19,7 @@ std::string star::Function::ToString() const
 
 star::Value star::Function::Call(Interpreter& interpreter, std::vector<Value> args)
 {
-	auto env = std::make_shared<Environment>(m_Chaining.lock());
+	auto env = std::make_shared<Environment>(m_Chaining);
 	for (size_t i = 0; i < m_Declaration->m_Parameters.size(); i++)
 	{
 		if (m_Declaration->m_Parameters[i]->m_ExpectedType != args[i].GetAssignedType())
