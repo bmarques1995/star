@@ -50,6 +50,8 @@ namespace star
 		Value VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt) override;
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;
 
+		void RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable);
+
 	protected:
 		void CheckNumberOperand(const Token& oper, const Value& operand);
 		void CheckNumberOperands(const Token& oper, const Value& left, const Value& right);

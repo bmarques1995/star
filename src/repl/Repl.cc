@@ -10,10 +10,13 @@
 #include "Parser.hh"
 #include "Version.hh"
 #include "EscapeObject.hh"
-
+#include "Print.hh"
 
 namespace fs = std::filesystem;
-star::CLInterpreter star::Star::s_Interpreter;
+star::Runtime star::Star::s_Runtime
+{
+    {"print", std::make_shared<Print>()},
+};
 
 void star::Star::RunFile(const std::string& filePath)
 {
@@ -72,11 +75,7 @@ void star::Star::Run(const std::string& source, const std::string& filepath)
 {
     try
     {
-        Scanner scanner(source, filepath);
-        std::vector<Token> tokens = scanner.ScanTokens();
-        Parser parser{tokens};
-        std::vector<std::shared_ptr<Statement::Stmt>> statements = parser.Parse();
-        s_Interpreter.Interpret(statements);
+        s_Runtime.Run(source, filepath);
     }
     catch(ScriptException e)
     {

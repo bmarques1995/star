@@ -392,3 +392,8 @@ star::Value star::Interpreter::VisitReturnStmt(std::shared_ptr<Statement::Return
     }
     throw Returner{ value };
 }
+
+void star::Interpreter::RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable)
+{
+    m_CurrentEnv->Define(Token{ TokenType::FUN, name, 1, 1, "::native" }, { callable });
+}
