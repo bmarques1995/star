@@ -11,6 +11,14 @@
             }
         },
         {
+            "name": "redist-release",
+            "hidden": true,
+            "cacheVariables": {
+                "STAR_MODIFY_EXEC_NAME": true,
+                "BUILD_TESTS": false
+            }
+        },
+        {
             "name": "vcpkg-linux-config",
             "hidden": true,
             "inherits": "vcpkg-base",
@@ -67,14 +75,23 @@
             "displayName": "Linux Release",
             "inherits": "linux-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "STAR_MODIFY_EXEC_NAME": true
+                "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "linux-redist-release",
+            "displayName": "Linux Redist Release",
+            "inherits": ["linux-release", "redist-release"]
         },
         {
             "name": "linux-vcpkg-release",
             "displayName": "Linux Release with vcpkg",
             "inherits": ["linux-release", "vcpkg-linux-config"]
+        },
+        {
+            "name": "linux-vcpkg-redist-release",
+            "displayName": "Linux VCPKG Redist Release",
+            "inherits": ["linux-vcpkg-release", "redist-release"]
         },
         {
             "name": "vcpkg-windows-config",
@@ -122,14 +139,23 @@
             "displayName": "Windows Release",
             "inherits": "windows-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "STAR_MODIFY_EXEC_NAME": true
+                "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "windows-redist-release",
+            "displayName": "Windows Redist Release",
+            "inherits": ["windows-release", "redist-release"]
         },
         {
             "name": "windows-vcpkg-release",
             "displayName": "Windows Release with vcpkg",
             "inherits": ["windows-release", "vcpkg-windows-config"]
+        },
+        {
+            "name": "windows-vcpkg-redist-release",
+            "displayName": "Windows VCPKG Redist Release",
+            "inherits": ["windows-vcpkg-release", "redist-release"]
         }
     ]
 }
