@@ -405,9 +405,14 @@ star::Value star::Interpreter::VisitIfStmt(std::shared_ptr<Statement::If> stmt)
 	Value condition = Evaluate(stmt->m_Condition);
 
 	if (IsTruthy(condition))
+    {
         return ExecuteStmt(stmt->m_ThenBranch);
-    else if (stmt->m_ElseBranch != nullptr)
-		return ExecuteStmt(stmt->m_ElseBranch);
+    }
+    else
+    {
+        if (stmt->m_ElseBranch != nullptr)
+            return ExecuteStmt(stmt->m_ElseBranch);
+    }
     return {};
 }
 

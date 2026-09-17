@@ -75,7 +75,17 @@ star::Value* star::Environment::GetAsPtr(const Token& name)
 
 void star::Environment::ReassignAt(const Token& name, Value value, size_t distance)
 {
-
+	auto desiredEnv = Anchestor(distance);
+	std::shared_ptr<Environment> tempParent;
+	try
+	{
+		TempUnlock(&tempParent, &desiredEnv);
+	}
+	catch (const std::exception& e)
+	{
+		throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
+	}
+	tempParent->Reassign(name, value);
 }
 
 star::Value star::Environment::GetAt(const Token& name, size_t distance)
@@ -110,7 +120,7 @@ star::Value* star::Environment::GetAsPtrAt(const Token& name, size_t distance)
 
 std::weak_ptr<star::Environment> star::Environment::Anchestor(size_t distance)
 {
-	std::weak_ptr<Environment> tempParent = m_Parent;
+	std::weak_ptr<Environment> tempParent = weak_from_this();
 	for (size_t i = 0; i < distance; i++)
 	{
 		tempParent = !tempParent.expired() ? tempParent.lock()->m_Parent : std::weak_ptr<Environment>(); //!tempParent.expired()

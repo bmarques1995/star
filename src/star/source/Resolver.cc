@@ -80,6 +80,12 @@ void star::Resolver::Define(Token& name)
 star::Resolver::Resolver(std::shared_ptr<Interpreter>& interpreter) :
 	m_Interpreter(interpreter)
 {
+	BeginScope();
+}
+
+star::Resolver::~Resolver()
+{
+	EndScope();
 }
 
 void star::Resolver::Resolve(std::vector<std::shared_ptr<Statement::Stmt>>& statements)

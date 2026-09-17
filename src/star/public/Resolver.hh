@@ -35,6 +35,7 @@ namespace star
 	
 	public:
 		Resolver(std::shared_ptr<Interpreter>& interpreter);
+		~Resolver();
 		void Resolve(std::vector<std::shared_ptr<Statement::Stmt>>& statements);
 
 		Value VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr) override;
