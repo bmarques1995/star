@@ -94,6 +94,35 @@ star::Value star::Statement::While::Accept(StmtVisitor& visitor)
 	return visitor.VisitWhileStmt(shared_from_this());
 }
 
+star::Statement::ForLoop::ForLoop(
+	std::shared_ptr<Stmt> start, 
+	std::shared_ptr<star::Expression::Expr> condition, 
+	std::shared_ptr<Stmt> body,
+	std::shared_ptr<Statement::Expression> lastCommand
+) :
+	m_Start(start), m_Condition(condition)
+{
+	if (lastCommand != nullptr) {
+		m_Body = std::make_shared<Statement::Block>(
+			std::vector<std::shared_ptr<Statement::Stmt>> {
+			body, lastCommand
+		}
+		);
+	}
+	else {
+		m_Body = std::make_shared<Statement::Block>(
+			std::vector<std::shared_ptr<Statement::Stmt>> {
+			body
+		}
+		);
+	}
+}
+
+star::Value star::Statement::ForLoop::Accept(StmtVisitor& visitor)
+{
+	return visitor.VisitForStmt(shared_from_this());
+}
+
 star::Statement::Function::Function(Token name, std::vector<std::shared_ptr<Statement::FunctionArgument>> parameters, 
 	std::vector<std::shared_ptr<Stmt>> body, VariableType expectedType) :
 	m_Name(name), m_Parameters(parameters), m_Body(body), m_ExpectedType(expectedType)

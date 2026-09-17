@@ -57,6 +57,7 @@ namespace star
 		Value VisitBlockStmt(std::shared_ptr<Statement::Block> stmt) override;
 		Value VisitIfStmt(std::shared_ptr<Statement::If> stmt) override;
 		Value VisitWhileStmt(std::shared_ptr<Statement::While> stmt) override;
+		Value VisitForStmt(std::shared_ptr<Statement::ForLoop> stmt) override;
 		Value VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt) override;
 		Value VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt) override;
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;

@@ -427,6 +427,18 @@ star::Value star::Interpreter::VisitWhileStmt(std::shared_ptr<Statement::While> 
     return {};
 }
 
+star::Value star::Interpreter::VisitForStmt(std::shared_ptr<Statement::ForLoop> stmt)
+{
+	ExecuteStmt(stmt->m_Start);
+    Value condition = Evaluate(stmt->m_Condition);
+    while (IsTruthy(condition))
+    {
+        ExecuteStmt(stmt->m_Body);
+        condition = Evaluate(stmt->m_Condition);
+    }
+    return Value();
+}
+
 star::Value star::Interpreter::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
 {
     auto function = std::make_shared<Function>(stmt, m_CurrentEnv);

@@ -50,6 +50,7 @@ namespace star
         struct Block;
         struct If;
         struct While;
+        struct ForLoop;
         struct Function;
         struct FunctionArgument;
         struct Return;
@@ -67,6 +68,7 @@ namespace star
             virtual Value VisitBlockStmt(std::shared_ptr<Block> stmt) = 0;
             virtual Value VisitIfStmt(std::shared_ptr<If> stmt) = 0;
             virtual Value VisitWhileStmt(std::shared_ptr<While> stmt) = 0;
+            virtual Value VisitForStmt(std::shared_ptr<ForLoop> stmt) = 0;
             virtual Value VisitFunctionStmt(std::shared_ptr<Function> stmt) = 0;
             virtual Value VisitFunctionArgumentStmt(std::shared_ptr<FunctionArgument> stmt) = 0;
             virtual Value VisitReturnStmt(std::shared_ptr<Return> stmt) = 0;

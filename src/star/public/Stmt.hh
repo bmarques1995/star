@@ -83,6 +83,18 @@ namespace star
             Value Accept(StmtVisitor& visitor) override;
         };
 
+        struct STAR_API ForLoop : public Stmt, public std::enable_shared_from_this<ForLoop>
+        {
+            std::shared_ptr<Stmt> m_Start;
+            std::shared_ptr<star::Expression::Expr> m_Condition;
+            std::shared_ptr<Stmt> m_Body;
+
+            ForLoop(std::shared_ptr<Stmt> start, std::shared_ptr<star::Expression::Expr> condition,
+                std::shared_ptr<Stmt> body, std::shared_ptr<Statement::Expression> lastCommand);
+
+            Value Accept(StmtVisitor& visitor) override;
+        };
+
         struct STAR_API Function : public Stmt, public std::enable_shared_from_this<Function>
         {
             Token m_Name;

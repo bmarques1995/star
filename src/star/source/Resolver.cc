@@ -233,6 +233,16 @@ star::Value star::Resolver::VisitWhileStmt(std::shared_ptr<Statement::While> stm
 	return {};
 }
 
+star::Value star::Resolver::VisitForStmt(std::shared_ptr<Statement::ForLoop> stmt)
+{
+	BeginScope();
+	Resolve(stmt->m_Start);
+	Resolve(stmt->m_Condition);
+	Resolve(stmt->m_Body);
+	EndScope();
+	return {};
+}
+
 star::Value star::Resolver::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
 {
 	Statement::FunctionArgument name{ stmt->m_Name, stmt->m_ExpectedType };

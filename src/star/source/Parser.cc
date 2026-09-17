@@ -453,6 +453,9 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ForStatement()
     else if (Match(TokenType::VAR)) {
         init = VarDeclaration();
     }
+    else if (Match(TokenType::AUTO)) {
+        init = AutoDeclaration();
+    }
     else {
         init = ExpressionStatement();
     }
@@ -463,37 +466,22 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ForStatement()
     }
     Consume(TokenType::SEMICOLON, "Expected ';' after for condition.");
 
-    std::shared_ptr<Expression::Expr> increment = nullptr;
+    std::shared_ptr<Statement::Expression> lastCommand = nullptr;
     if (!Check(TokenType::RIGHT_PAREN)) {
-        increment = Expression();
+        auto expr = Expression();
+        lastCommand = std::make_shared<Statement::Expression>(expr);
     }
     Consume(TokenType::RIGHT_PAREN, "Expected ')' after loop condition.");
 
     std::shared_ptr<Statement::Stmt> body = Statement();
-    if (increment != nullptr) {
-        body = std::make_shared<Statement::Block>(
-            std::vector<std::shared_ptr<Statement::Stmt>> {
-            body, std::make_shared<Statement::Expression>(increment)
-        }
-        );
-    }
 
     if (condition == nullptr)
     {
         Value v{TokenType::ST_TRUE, ""};
         condition = std::make_shared<Expression::Literal>(v);
     }
-    body = std::make_shared<Statement::While>(condition, body);
-
-    if (init != nullptr) {
-        body = std::make_shared<Statement::Block>(
-            std::vector<std::shared_ptr<Statement::Stmt>>{
-            init, body
-        }
-        );
-    }
-
-    return body;
+    
+    return std::make_shared<Statement::ForLoop>(init, condition, body, lastCommand);
 }
 
 std::shared_ptr<star::Statement::Stmt> star::Parser::ReturnStatement()
