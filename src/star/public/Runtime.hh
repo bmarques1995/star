@@ -2,8 +2,6 @@
 
 #include "StarMacro.hh"
 #include "Callable.hh"
-#include "Scanner.hh"
-#include "Parser.hh"
 #include "Interpreter.hh"
 
 namespace star
@@ -19,6 +17,6 @@ namespace star
 		void Run(const std::string& source, const std::string& filepath = "::repl");
 
 	private:
-		Interpreter m_Interpreter;
+		std::shared_ptr<Interpreter> m_Interpreter;
 	};
 }

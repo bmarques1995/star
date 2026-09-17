@@ -44,6 +44,7 @@ namespace star
 
 		Value VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt) override;
 		Value VisitVariableStmt(std::shared_ptr<Statement::Variable> stmt) override;
+		Value VisitAutoStmt(std::shared_ptr<Statement::Auto> stmt) override;
 		Value VisitBlockStmt(std::shared_ptr<Statement::Block> stmt) override;
 		Value VisitIfStmt(std::shared_ptr<Statement::If> stmt) override;
 		Value VisitWhileStmt(std::shared_ptr<Statement::While> stmt) override;
@@ -52,6 +53,7 @@ namespace star
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;
 
 		void RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable);
+		void Resolve(std::shared_ptr<Expression::Expr> expr, size_t depth);
 
 	protected:
 		void CheckNumberOperand(const Token& oper, const Value& operand);

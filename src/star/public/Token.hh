@@ -25,6 +25,8 @@ namespace star
         size_t m_Line;
         size_t m_Column;
     };
+    STAR_API std::ostream& operator<<(std::ostream& out, const Token& token);
+    STAR_API bool operator<(const star::Token& lhs, const star::Token& rhs);
 }
 
-STAR_API std::ostream& operator<<(std::ostream& out, const star::Token& token);
+

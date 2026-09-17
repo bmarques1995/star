@@ -405,7 +405,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
         init = Expression();
     }
     Consume(TokenType::SEMICOLON, "Expected ; after variable declaration.");
-    return std::make_shared<Statement::Variable>(name, init, true);
+    return std::make_shared<Statement::Auto>(name, init);
 }
 
 std::vector<std::shared_ptr<star::Statement::Stmt>> star::Parser::Block()

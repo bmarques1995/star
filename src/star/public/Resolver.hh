@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <utility>
 #include "FunctionType.hh"
 
 namespace star
@@ -15,26 +16,26 @@ namespace star
 	class STAR_API Resolver : public Expression::ExprVisitor, public Statement::StmtVisitor
 	{
 	private:
-		Interpreter& interpreter;
+		std::shared_ptr<Interpreter> m_Interpreter;
 		std::vector<std::map<std::string, bool>> scopes;
-		std::vector<std::map<Token, size_t>> identifiers;
+		std::vector<std::map<Token, std::pair<VariableType, size_t>>> identifiers;
 		FunctionType m_CurrentFunctionType;
 
 		void Resolve(std::shared_ptr<Statement::Stmt> statement);
 		void Resolve(std::shared_ptr<Expression::Expr> expression);
 
 		void ResolveLocal(std::shared_ptr<Expression::Expr> expression, Token& name);
-		void ResolveFunction(std::vector<Statement::FunctionArgument> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
+		void ResolveFunction(std::vector<std::shared_ptr<Statement::FunctionArgument>> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
 
 		void BeginScope();
 		void EndScope();
 
-		void Declare(Token& name);
+		void Declare(Statement::FunctionArgument& name);
 		void Define(Token& name);
 	
 	public:
-		Resolver(Interpreter& interpreter);
-		void Resolve(std::vector<Statement::FunctionArgument> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
+		Resolver(std::shared_ptr<Interpreter>& interpreter);
+		void Resolve(std::vector<std::shared_ptr<Statement::Stmt>>& statements);
 
 		Value VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr) override;
 		Value VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr) override;
@@ -51,6 +52,7 @@ namespace star
 
 		Value VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt) override;
 		Value VisitVariableStmt(std::shared_ptr<Statement::Variable> stmt) override;
+		Value VisitAutoStmt(std::shared_ptr<Statement::Auto> stmt) override;
 		Value VisitBlockStmt(std::shared_ptr<Statement::Block> stmt) override;
 		Value VisitIfStmt(std::shared_ptr<Statement::If> stmt) override;
 		Value VisitWhileStmt(std::shared_ptr<Statement::While> stmt) override;

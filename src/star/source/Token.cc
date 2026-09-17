@@ -22,10 +22,15 @@ std::string star::Token::ToString() const
     return strToken;
 }
 
-std::ostream& operator<<(std::ostream& out, const star::Token& token)
+std::ostream& star::operator<<(std::ostream& out, const star::Token& token)
 {
     out << token.ToString();
     return out;
+}
+
+bool star::operator<(const Token& lhs,const Token& rhs)
+{
+    return lhs.GetLexeme() < rhs.GetLexeme();
 }
 
 const star::TokenType star::Token::GetTokenType() const

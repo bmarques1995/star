@@ -33,6 +33,16 @@ namespace star
             const VariableType ExpectedType() const;
         };
 
+        struct STAR_API Auto : public Stmt, public std::enable_shared_from_this<Auto> 
+        {
+            Token m_Name;
+            std::shared_ptr<star::Expression::Expr> m_Init;
+
+            Auto(Token name, std::shared_ptr<star::Expression::Expr> init);
+
+            Value Accept(StmtVisitor& visitor) override;
+        };
+
         struct STAR_API FunctionArgument : public Stmt, public std::enable_shared_from_this<FunctionArgument>
         {
 			Token m_Name;
@@ -41,7 +51,10 @@ namespace star
 			FunctionArgument(Token name, VariableType expectedType);
 			Value Accept(StmtVisitor& visitor) override;
             const VariableType ExpectedType() const;
+
+            
         };
+        STAR_API bool operator<(const FunctionArgument& lhs, const FunctionArgument& rhs);
 
 		struct STAR_API Block : public Stmt, public std::enable_shared_from_this<Block>
 		{

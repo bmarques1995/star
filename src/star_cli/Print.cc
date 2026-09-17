@@ -16,7 +16,7 @@ std::string star::Print::ToString() const
 	return "<print>";
 }
 
-star::Value star::Print::Call(Interpreter& interpreter, std::vector<Value> args)
+star::Value star::Print::Call(Interpreter& m_Interpreter, std::vector<Value> args)
 {
 	NeutralConsole() << args[0].ToString() << "\n";
 	return {TokenType::VOID, ""};

@@ -1,5 +1,7 @@
 #include "Environment.hh"
 #include "RuntimeError.hh"
+#include <stdexcept>
+
 star::Environment::Environment() :
 	m_Parent()
 {
@@ -99,7 +101,7 @@ star::Value* star::Environment::GetAsPtrAt(const Token& name, size_t distance)
 	{
 		TempUnlock(&tempParent, &desiredEnv);
 	}
-	catch (const std::exception& e)
+	catch (const std::runtime_error& e)
 	{
 		throw RuntimeError(name, "Undefined variable: '" + name.GetLexeme() + "'.");
 	}
@@ -120,7 +122,7 @@ void star::Environment::TempUnlock(std::shared_ptr<Environment>* dest, std::weak
 {
 	if (src->expired())
 	{
-		throw std::exception("Undefined scope ");
+		throw std::runtime_error("Undefined scope ");
 	}
 	else
 	{

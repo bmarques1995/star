@@ -88,6 +88,7 @@ namespace star
 		Value(TokenType type, std::string_view lexeme);
 		Value(const Storage& value);
 		Value(const Storage& value, bool lockType);
+		Value();
 		~Value() = default;
 
 		const std::string ToString(const std::string& format = "") const;

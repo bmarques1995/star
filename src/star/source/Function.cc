@@ -2,7 +2,7 @@
 #include "RuntimeError.hh"
 #include "Interpreter.hh"
 
-star::Function::Function(std::shared_ptr<Statement::Function> declaration, std::shared_ptr<Environment> chaining) :
+star::Function::Function(std::shared_ptr<Statement::Function> declaration, std::weak_ptr<Environment> chaining) :
 	m_Declaration(declaration), m_Chaining(chaining)
 {
 }

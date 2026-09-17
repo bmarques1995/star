@@ -96,6 +96,12 @@ star::Value::Value(const Storage& value, bool lockType) :
 	    LockType();
 }
 
+star::Value::Value()
+{
+    m_Type = VariableType::Null;
+    m_Value = std::monostate{};
+}
+
 bool star::Value::IsInitialized() const
 {
     return !std::holds_alternative<std::monostate>(m_Value);

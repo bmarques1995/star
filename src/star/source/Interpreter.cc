@@ -370,8 +370,6 @@ star::Value star::Interpreter::VisitVariableStmt(std::shared_ptr<Statement::Vari
         Value value = Evaluate(stmt->m_Init);
         if (stmt->ExpectedType() == VariableType::Dynamic)
         {
-            if(stmt->m_LockType)
-				value.LockType();
             m_CurrentEnv.lock()->Define(stmt->m_Name, std::move(value));
         }
         else
@@ -383,13 +381,23 @@ star::Value star::Interpreter::VisitVariableStmt(std::shared_ptr<Statement::Vari
         }
     }
     
-    return { TokenType::NIL, "" };
+    return {};
+}
+
+star::Value star::Interpreter::VisitAutoStmt(std::shared_ptr<Statement::Auto> stmt)
+{
+	if (stmt->m_Init != nullptr) {
+		Value value = Evaluate(stmt->m_Init);
+        value.LockType();
+		m_CurrentEnv.lock()->Define(stmt->m_Name, std::move(value));
+	}
+    return Value();
 }
 
 star::Value star::Interpreter::VisitBlockStmt(std::shared_ptr<Statement::Block> stmt)
 {
     ExecuteBlock(stmt->m_Statements, std::make_shared<Environment>(m_CurrentEnv));
-    return { TokenType::NIL, "" };
+    return {};
 }
 
 star::Value star::Interpreter::VisitIfStmt(std::shared_ptr<Statement::If> stmt)
@@ -400,7 +408,7 @@ star::Value star::Interpreter::VisitIfStmt(std::shared_ptr<Statement::If> stmt)
         return ExecuteStmt(stmt->m_ThenBranch);
     else if (stmt->m_ElseBranch != nullptr)
 		return ExecuteStmt(stmt->m_ElseBranch);
-    return { TokenType::NIL, "" };
+    return {};
 }
 
 star::Value star::Interpreter::VisitWhileStmt(std::shared_ptr<Statement::While> stmt)
@@ -411,14 +419,14 @@ star::Value star::Interpreter::VisitWhileStmt(std::shared_ptr<Statement::While> 
 		ExecuteStmt(stmt->m_Body);
 		condition = Evaluate(stmt->m_Condition);
 	}
-    return { TokenType::NIL, "" };
+    return {};
 }
 
 star::Value star::Interpreter::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
 {
     auto function = std::make_shared<Function>(stmt, m_CurrentEnv);
     m_CurrentEnv.lock()->Define(stmt->m_Name, { function });
-    return { TokenType::NIL, "" };
+    return {};
 }
 
 star::Value star::Interpreter::VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt)
@@ -438,4 +446,9 @@ star::Value star::Interpreter::VisitReturnStmt(std::shared_ptr<Statement::Return
 void star::Interpreter::RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable)
 {
     m_CurrentEnv.lock()->Define(Token{ TokenType::FUN, name, 1, 1, "::native" }, { callable });
+}
+
+void star::Interpreter::Resolve(std::shared_ptr<Expression::Expr> expr, size_t depth)
+{
+    locals[expr] = depth;
 }

@@ -46,6 +46,7 @@ namespace star
     {
         struct Expression;
         struct Variable;
+        struct Auto;
         struct Block;
         struct If;
         struct While;
@@ -61,6 +62,7 @@ namespace star
         {
             virtual Value VisitExpressionStmt(std::shared_ptr<Expression> stmt) = 0;
             virtual Value VisitVariableStmt(std::shared_ptr<Variable> stmt) = 0;
+            virtual Value VisitAutoStmt(std::shared_ptr<Auto> stmt) = 0;
             
             virtual Value VisitBlockStmt(std::shared_ptr<Block> stmt) = 0;
             virtual Value VisitIfStmt(std::shared_ptr<If> stmt) = 0;

@@ -13,7 +13,7 @@ namespace star
     class STAR_API Function : public Callable
     {
     public:
-        Function(std::shared_ptr<Statement::Function> declaration, std::shared_ptr<Environment> chaining);
+        Function(std::shared_ptr<Statement::Function> declaration, std::weak_ptr<Environment> chaining);
 
         const size_t Arity() const override;
         std::string ToString() const override;

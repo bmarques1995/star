@@ -15,7 +15,7 @@ namespace star
 		const size_t Arity() const override;
 		std::string ToString() const override;
 
-		Value Call(Interpreter& interpreter, std::vector<Value> args) override;
+		Value Call(Interpreter& m_Interpreter, std::vector<Value> args) override;
 	public:
 		size_t m_Arity;
 
