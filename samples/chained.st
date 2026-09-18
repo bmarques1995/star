@@ -12,4 +12,4 @@ for(x = 0; x < 4; x++){
 
 print("----------------");
 print(x); // 4
-print(`Isso é x: ${x}$`);
+print(`Isto é x: ${x}$`);
