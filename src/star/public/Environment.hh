@@ -27,6 +27,13 @@ namespace star
 		Value GetAt(const Token& name, size_t distance);
 		Value* GetAsPtrAt(const Token& name, size_t distance);
 
+#ifdef STAR_DEBUG
+		void SetEnvName(std::string name);
+	private:
+		std::string m_EnvName;
+	public:
+#endif
+
 		std::weak_ptr<Environment> Anchestor(size_t distance);
 	};
 }

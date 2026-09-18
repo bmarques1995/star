@@ -88,6 +88,7 @@ namespace star
             std::shared_ptr<Stmt> m_Start;
             std::shared_ptr<star::Expression::Expr> m_Condition;
             std::shared_ptr<Stmt> m_Body;
+            std::shared_ptr<Statement::Expression> m_LastCommand;
 
             ForLoop(std::shared_ptr<Stmt> start, std::shared_ptr<star::Expression::Expr> condition,
                 std::shared_ptr<Stmt> body, std::shared_ptr<Statement::Expression> lastCommand);

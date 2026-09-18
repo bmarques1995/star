@@ -1,15 +1,22 @@
 #include "Environment.hh"
 #include "RuntimeError.hh"
+#include <memory>
 #include <stdexcept>
 
 star::Environment::Environment() :
 	m_Parent()
 {
+#ifdef STAR_DEBUG
+	m_EnvName = "";
+#endif
 }
 
 star::Environment::Environment(std::weak_ptr<Environment> parent) :
 	m_Parent(parent)
 {
+#ifdef STAR_DEBUG
+	m_EnvName = "";
+#endif
 }
 
 void star::Environment::Define(const Token& name, Value value)
@@ -49,7 +56,7 @@ void star::Environment::Reassign(const Token& name, Value value)
 
 star::Value star::Environment::Get(const Token& name) 
 {
-	auto tempParent = m_Parent.lock();
+	auto tempParent = m_Parent.expired() ? nullptr : m_Parent.lock();
 	auto elem = m_Values.find(name.GetLexeme());
 	if (elem != m_Values.end()) {
 		return elem->second;
@@ -117,6 +124,15 @@ star::Value* star::Environment::GetAsPtrAt(const Token& name, size_t distance)
 	}
 	return tempParent->GetAsPtr(name);
 }
+
+#ifdef STAR_DEBUG
+
+void star::Environment::SetEnvName(std::string name)
+{
+	m_EnvName = name;
+}
+
+#endif
 
 std::weak_ptr<star::Environment> star::Environment::Anchestor(size_t distance)
 {

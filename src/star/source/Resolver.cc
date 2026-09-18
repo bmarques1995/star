@@ -239,6 +239,7 @@ star::Value star::Resolver::VisitForStmt(std::shared_ptr<Statement::ForLoop> stm
 	Resolve(stmt->m_Start);
 	Resolve(stmt->m_Condition);
 	Resolve(stmt->m_Body);
+	Resolve(stmt->m_LastCommand);
 	EndScope();
 	return {};
 }

@@ -100,22 +100,9 @@ star::Statement::ForLoop::ForLoop(
 	std::shared_ptr<Stmt> body,
 	std::shared_ptr<Statement::Expression> lastCommand
 ) :
-	m_Start(start), m_Condition(condition)
+	m_Start(start), m_Condition(condition),
+	m_Body(body), m_LastCommand(lastCommand)
 {
-	if (lastCommand != nullptr) {
-		m_Body = std::make_shared<Statement::Block>(
-			std::vector<std::shared_ptr<Statement::Stmt>> {
-			body, lastCommand
-		}
-		);
-	}
-	else {
-		m_Body = std::make_shared<Statement::Block>(
-			std::vector<std::shared_ptr<Statement::Stmt>> {
-			body
-		}
-		);
-	}
 }
 
 star::Value star::Statement::ForLoop::Accept(StmtVisitor& visitor)
