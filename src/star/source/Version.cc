@@ -1,9 +1,13 @@
 #include "Version.hh"
 #include <sstream>
+#include "ProgramVersion.hh"
 
 std::string star::Version::GetVersion()
 {
-	return "in development";
+    std::stringstream ss;
+    ss << version::s_MajorVersion << "." << version::s_MinorVersion << "." << version::s_PatchVersion;
+    std::string starVersion = ss.str();
+	return starVersion;
 }
 
 std::string star::Version::GetCompilerNameAndVersion()

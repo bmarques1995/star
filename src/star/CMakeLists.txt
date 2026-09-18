@@ -15,9 +15,15 @@ set_msvc_debug_improvements(${TARGET_NAME})
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>
                                                  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public/builtin>
                                                  $<INSTALL_INTERFACE:include>
-                                          PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
+                                          PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
+                                                  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/private>)
 target_link_libraries(${TARGET_NAME} PRIVATE magic_enum::magic_enum
                                          PUBLIC PCRE2::8BIT PCRE2::POSIX fmt::fmt)
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/private/ProgramVersion.hh.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/private/ProgramVersion.hh"
+    @ONLY
+)
 enable_coverage(${TARGET_NAME})
 target_compile_definitions(${TARGET_NAME} PUBLIC $<$<CONFIG:Debug>:STAR_DEBUG>)
 
