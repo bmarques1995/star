@@ -31,6 +31,19 @@ function(enable_llvm_memory_debug TARGET_NAME)
 	endif()
 endfunction()
 
+function(set_msvc_debug_improvements TARGET_NAME)
+    if(MSVC)
+        target_compile_options(${TARGET_NAME} PRIVATE
+            $<$<CONFIG:Debug>:/Od>
+            $<$<CONFIG:Debug>:/Zi>
+        )
+
+        target_link_options(${TARGET_NAME} PRIVATE
+            $<$<CONFIG:Debug>:/DEBUG>
+        )
+    endif()
+endfunction()
+
 if(VCPKG_PREFIX_PATH AND VCPKG_TARGET_TRIPLET)
     set(CMAKE_PREFIX_PATH "${VCPKG_PREFIX_PATH}")
 endif()

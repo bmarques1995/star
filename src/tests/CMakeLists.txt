@@ -9,6 +9,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE star GTest::gtest GTest::gtest_main
 set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
 set_artifacts_dir(${TARGET_NAME} ${PROJECT_BINARY_DIR})
 set_msvc_target_utf8(${TARGET_NAME})
+set_msvc_debug_improvements(${TARGET_NAME})
 if(NOT WIN32)
     append_rpath(TARGET_NAME ${TARGET_NAME})
 endif()

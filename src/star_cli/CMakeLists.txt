@@ -6,6 +6,7 @@ add_library(${TARGET_NAME} ${STAR_CLI_SRC_FILES} ${STAR_CLI_HDR_FILES})
 set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
 set_artifacts_dir(${TARGET_NAME} ${PROJECT_BINARY_DIR})
 set_msvc_target_utf8(${TARGET_NAME})
+set_msvc_debug_improvements(${TARGET_NAME})
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                  $<INSTALL_INTERFACE:include>)
 target_link_libraries(${TARGET_NAME} PRIVATE star)

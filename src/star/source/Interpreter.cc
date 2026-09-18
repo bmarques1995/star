@@ -42,8 +42,7 @@ star::Value star::Interpreter::VisitTemplateLiteralExpr(std::shared_ptr<Expressi
             }
             else
             {
-                Interpreter i;
-                return Stringify(i.Interpret(shard.first), shard.second);
+                return Stringify(this->Interpret(shard.first), shard.second);
             }
         },
         *it);
@@ -433,6 +432,7 @@ star::Value star::Interpreter::VisitWhileStmt(std::shared_ptr<Statement::While> 
 star::Value star::Interpreter::VisitForStmt(std::shared_ptr<Statement::ForLoop> stmt)
 {
     auto environment = std::make_shared<Environment>(m_CurrentEnv);
+    auto previous = m_CurrentEnv;
     environment->SetEnvName("ForLoop");
 	m_CurrentEnv = environment;
 	ExecuteStmt(stmt->m_Start);
@@ -443,6 +443,7 @@ star::Value star::Interpreter::VisitForStmt(std::shared_ptr<Statement::ForLoop> 
         ExecuteStmt(stmt->m_LastCommand);
         condition = Evaluate(stmt->m_Condition);
     }
+    m_CurrentEnv = previous;
     return Value();
 }
 
