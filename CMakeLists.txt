@@ -101,7 +101,7 @@ add_cpack_wix_configs(
     UI "StarlangUI"
     PATCH "${PROJECT_SOURCE_DIR}/wix/wix_patch.xml"
     EXTENSIONS "WixToolset.UI.wixext" "WixToolset.Util.wixext"
-    EXTRA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/wix/StarlangUI.wxs"
+    EXTRA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/wix/StarlangUI.wxs" "${CMAKE_CURRENT_SOURCE_DIR}/wix/StarlangInstallOpts.wxs"
     EXTRA_ACTIONS "STARLANG_ADD_TO_PATH"
     ICON ${PROJECT_BINARY_DIR}/favicon.ico
     BANNER ${PROJECT_BINARY_DIR}/banner.png

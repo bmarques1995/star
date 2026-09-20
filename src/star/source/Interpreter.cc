@@ -13,7 +13,6 @@ star::Interpreter::Interpreter()
 {
 	m_Global.reset(new Environment());
     m_Global->Define(Token{ TokenType::FUN, "escape", 1, 1, "::native" }, Value{ std::make_shared<Escape>() });
-    m_Global->SetEnvName("Global");
     m_CurrentEnv = m_Global;
 }
 
@@ -397,7 +396,6 @@ star::Value star::Interpreter::VisitAutoStmt(std::shared_ptr<Statement::Auto> st
 star::Value star::Interpreter::VisitBlockStmt(std::shared_ptr<Statement::Block> stmt)
 {
     auto environment = std::make_shared<Environment>(m_CurrentEnv);
-    environment->SetEnvName("Block");
     ExecuteBlock(stmt->m_Statements, std::make_shared<Environment>(environment));
     return {};
 }
@@ -433,7 +431,6 @@ star::Value star::Interpreter::VisitForStmt(std::shared_ptr<Statement::ForLoop> 
 {
     auto environment = std::make_shared<Environment>(m_CurrentEnv);
     auto previous = m_CurrentEnv;
-    environment->SetEnvName("ForLoop");
 	m_CurrentEnv = environment;
 	ExecuteStmt(stmt->m_Start);
     Value condition = Evaluate(stmt->m_Condition);

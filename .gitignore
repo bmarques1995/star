@@ -15,3 +15,4 @@ _CPack_Packages/
 *.tar.xz
 *.deb
 *.rpm
+*.zip

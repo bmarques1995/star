@@ -37,7 +37,7 @@ macro(add_cpack_wix_configs)
             (NOT DEFINED WIX_PACKER_UI))
             message(FATAL_ERROR "UI and UPGRADE_GUID are mandatory")
         endif()
-        set(CPACK_GENERATOR "WIX")
+        set(CPACK_GENERATOR "WIX;ZIP")
         set(CPACK_WIX_VERSION "4")
         set(CPACK_WIX_UPGRADE_GUID
             ${WIX_PACKER_UPGRADE_GUID}
