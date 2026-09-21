@@ -3,9 +3,10 @@
 #include <string>
 #include "Runtime.hh"
 
-namespace star {
-
-    class Star {
+namespace star
+{
+    class Star
+    {
     public:
         static void RunFile(const std::string& filePath);
         static void RunPrompt();

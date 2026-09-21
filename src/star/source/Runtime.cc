@@ -23,7 +23,7 @@ void star::Runtime::RegisterCallable(const std::string& name, std::shared_ptr<Ca
 void star::Runtime::Run(const std::string& source, const std::string& filepath)
 {
 	Scanner scanner{source, filepath};
-	auto tokens = scanner.ScanTokens();
+	std::vector<Token> tokens = scanner.ScanTokens();
 	Parser parser{tokens};
 	auto statements = parser.Parse();
 	Resolver resolver{ m_Interpreter };

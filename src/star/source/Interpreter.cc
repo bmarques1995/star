@@ -5,6 +5,7 @@
 #include "Value.hh"
 #include "RuntimeError.hh"
 #include "Function.hh"
+#include "Instance.hh"
 #include <sstream>
 #include <variant>
 #include "Escape.hh"
@@ -220,14 +221,21 @@ star::Value star::Interpreter::VisitCallExpr(std::shared_ptr<Expression::Call> e
     {
         arguments.push_back(Evaluate(argument));
     }
-    std::shared_ptr<Callable> function;
-    if (callee.GetType() == VariableType::Callable)
+    std::shared_ptr<Callable> function = nullptr;
+    if (callee.GetType() == VariableType::Callable || callee.GetType() == VariableType::Class)
     {
-        if (auto* value = std::get_if<std::shared_ptr<Callable>>(&callee.GetLValue()))
+        switch (callee.GetType())
         {
-            function = *value;
+		case VariableType::Class:
+            function = std::get<std::shared_ptr<Class>>(callee.GetLValue());
+            break;
+        case VariableType::Callable:
+			function = std::get<std::shared_ptr<Callable>>(callee.GetLValue());
+			break;
+        default:
+            break;
         }
-        else
+        if(!function)
         {
             throw RuntimeError(expr->m_Paren, "Invalid function value");
         }
@@ -235,8 +243,45 @@ star::Value star::Interpreter::VisitCallExpr(std::shared_ptr<Expression::Call> e
 		{
 			throw RuntimeError(expr->m_Paren, "Expected " + std::to_string(function->Arity()) + " arguments but got " + std::to_string(arguments.size()));
         }
+        return function->Call(*this, arguments);
     }
-    return function->Call(*this, arguments);
+    throw RuntimeError(expr->m_Paren, "Can only call functions and classes.");
+}
+
+star::Value star::Interpreter::VisitGetExpr(std::shared_ptr<Expression::Get> expr)
+{
+    Value object = Evaluate(expr->m_Object);
+    return std::visit([this, expr](auto& shard)-> Value
+        {
+            using T = std::decay_t<decltype(shard)>;
+            if constexpr (std::is_same_v<T, std::shared_ptr<Instance>>)
+            {
+                return shard->Get(expr->m_Name);
+            }
+            else
+            {
+                throw RuntimeError(expr->m_Name, "Only instances have properties.");
+            }
+        },
+        Evaluate(expr->m_Object).GetLValue());
+}
+
+star::Value star::Interpreter::VisitSetExpr(std::shared_ptr<Expression::Set> expr)
+{
+    return std::visit([this, expr](auto& shard)-> Value
+    {
+        using T = std::decay_t<decltype(shard)>;
+        if constexpr (std::is_same_v<T, std::shared_ptr<Instance>>)
+        {
+            Value value = Evaluate(expr->m_Value);
+            shard->Set(expr->m_Name, value);
+        }
+        else
+        {
+            throw RuntimeError(expr->m_Name, "Only instances have properties.");
+        }
+    },
+    Evaluate(expr->m_Object).GetLValue());
 }
 
 bool star::Interpreter::IsTruthy(const Value& object)
@@ -447,7 +492,7 @@ star::Value star::Interpreter::VisitForStmt(std::shared_ptr<Statement::ForLoop> 
 star::Value star::Interpreter::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
 {
     auto function = std::make_shared<Function>(stmt, m_CurrentEnv);
-    m_CurrentEnv.lock()->Define(stmt->m_Name, { function });
+    m_CurrentEnv.lock()->Define(stmt->m_Name, { function }, true);
     return {};
 }
 
@@ -463,6 +508,12 @@ star::Value star::Interpreter::VisitReturnStmt(std::shared_ptr<Statement::Return
         value = Evaluate(stmt->m_Value);
     }
     throw Returner{ value };
+}
+
+star::Value star::Interpreter::VisitClassStmt(std::shared_ptr<Statement::Class> stmt)
+{
+    m_CurrentEnv.lock()->Define(stmt->m_Name, { std::make_shared<Class>(stmt->m_Name, stmt->m_Methods, stmt->m_Fields, *this) }, true);
+    return Value();
 }
 
 void star::Interpreter::RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable)

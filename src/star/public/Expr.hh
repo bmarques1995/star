@@ -140,5 +140,24 @@ namespace star
 			~Call() = default;
 			Value Accept(ExprVisitor& visitor) override;
         };
+
+		struct STAR_API Get final : public Expr, public std::enable_shared_from_this<Get>
+		{
+			std::shared_ptr<Expr> m_Object;
+			Token m_Name;
+			Get(std::shared_ptr<Expr> object, Token name);
+			~Get() = default;
+			Value Accept(ExprVisitor& visitor) override;
+		};
+
+		struct STAR_API Set final : public Expr, public std::enable_shared_from_this<Set>
+		{
+			std::shared_ptr<Expr> m_Object;
+			Token m_Name;
+			std::shared_ptr<Expr> m_Value;
+			Set(std::shared_ptr<Expr> object, Token name, std::shared_ptr<Expr> value);
+			~Set() = default;
+			Value Accept(ExprVisitor& visitor) override;
+		};
     }
 }

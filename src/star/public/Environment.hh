@@ -19,7 +19,7 @@ namespace star
 		Environment();
 		Environment(std::weak_ptr<Environment> parent);
 
-		void Define(const Token& name, Value value);
+		void Define(const Token& name, Value value, bool lockType = false);
 		void Reassign(const Token& name, Value value);
 		Value Get(const Token& name);
 		Value* GetAsPtr(const Token& name);

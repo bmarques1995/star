@@ -6,6 +6,7 @@
 #include "StarMacro.hh"
 #include "Token.hh"
 #include "Visitor.hh"
+#include "FunctionType.hh"
 #include "Stmt.hh"
 
 namespace star
@@ -35,6 +36,9 @@ namespace star
         Token Advance();
         Token Consume(const TokenType&, const std::string&);
 
+        std::shared_ptr<Expression::Expr> EvaluateRecursiveAssignment(Expression::Variable* variable, std::shared_ptr<Expression::Expr> value, const Token& oper);
+        std::shared_ptr<Expression::Expr> EvaluateRecursiveSet(Expression::Get* getter, std::shared_ptr<Expression::Expr> value);
+
         std::shared_ptr<Expression::Expr> Expression();
         std::shared_ptr<Expression::Expr> Equality();
         std::shared_ptr<Expression::Expr> Comparison();
@@ -55,6 +59,7 @@ namespace star
         std::shared_ptr<Statement::Stmt> Declaration();
         std::shared_ptr<Statement::Stmt> VarDeclaration();
         std::shared_ptr<Statement::Stmt> AutoDeclaration();
+        std::shared_ptr<Statement::Stmt> ClassDeclaration();
 		std::vector<std::shared_ptr<Statement::Stmt>> Block();
 		std::shared_ptr<Statement::Stmt> IfStatement();
 		std::shared_ptr<Statement::Stmt> WhileStatement();
@@ -67,7 +72,7 @@ namespace star
 		//std::shared_ptr<Statement::Stmt> TryStatement();
 		//std::shared_ptr<Statement::Stmt> CatchClause();
 
-		std::shared_ptr<Statement::Function> Function(const std::string& name);
+		std::shared_ptr<Statement::Function> Function(const FunctionType& name);
 
         VariableType MatchHashtag();
 

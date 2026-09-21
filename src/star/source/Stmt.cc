@@ -132,3 +132,14 @@ star::Value star::Statement::Return::Accept(StmtVisitor& visitor)
 {
 	return visitor.VisitReturnStmt(shared_from_this());
 }
+
+star::Statement::Class::Class(Token name, 
+	std::vector<std::shared_ptr<Statement::Function>> methods,
+	std::vector<std::shared_ptr<Statement::Stmt>> fields) :
+	m_Name(name), m_Methods(methods), m_Fields(fields)
+{}
+
+star::Value star::Statement::Class::Accept(StmtVisitor& visitor)
+{
+	return visitor.VisitClassStmt(shared_from_this());
+}

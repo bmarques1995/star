@@ -19,7 +19,7 @@ star::Environment::Environment(std::weak_ptr<Environment> parent) :
 #endif
 }
 
-void star::Environment::Define(const Token& name, Value value)
+void star::Environment::Define(const Token& name, Value value, bool lockType)
 {
 	auto it = m_Values.find(name.GetLexeme());
 	if (it != m_Values.end())

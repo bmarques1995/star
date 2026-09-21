@@ -50,6 +50,8 @@ namespace star
 		Value VisitAssignmentExpr(std::shared_ptr<Expression::Assignment> expr) override;
 		Value VisitLogicalExpr(std::shared_ptr<Expression::Logical> expr) override;
 		Value VisitCallExpr(std::shared_ptr<Expression::Call> expr) override;
+		Value VisitGetExpr(std::shared_ptr<Expression::Get> expr) override;
+		Value VisitSetExpr(std::shared_ptr<Expression::Set> expr) override;
 
 		Value VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt) override;
 		Value VisitVariableStmt(std::shared_ptr<Statement::Variable> stmt) override;
@@ -61,5 +63,6 @@ namespace star
 		Value VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt) override;
 		Value VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt) override;
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;
+		Value VisitClassStmt(std::shared_ptr<Statement::Class> stmt) override;
 	};
 }

@@ -1,6 +1,7 @@
 #include "Function.hh"
 #include "RuntimeError.hh"
 #include "Interpreter.hh"
+#include <magic_enum/magic_enum.hpp>
 
 star::Function::Function(std::shared_ptr<Statement::Function> declaration, std::weak_ptr<Environment> chaining) :
 	m_Declaration(declaration), m_Chaining(chaining)
@@ -22,11 +23,13 @@ star::Value star::Function::Call(Interpreter& interpreter, std::vector<Value> ar
 	auto env = std::make_shared<Environment>(m_Chaining);
 	for (size_t i = 0; i < m_Declaration->m_Parameters.size(); i++)
 	{
-		if (m_Declaration->m_Parameters[i]->m_ExpectedType != args[i].GetAssignedType())
-#ifdef DISPLAY_IMPROVEMENTS
-#error "improve this error message to include the expected type and the actual type"
-#endif
-			throw RuntimeError(m_Declaration->m_Parameters[i]->m_Name, "Argument type mismatch");
+		if (!(m_Declaration->m_Parameters[i]->m_ExpectedType == VariableType::Dynamic) &&
+			m_Declaration->m_Parameters[i]->m_ExpectedType != args[i].GetAssignedType())
+		{
+			std::string actualType = magic_enum::enum_name(args[i].GetAssignedType()).data();
+			std::string expectedType = magic_enum::enum_name(m_Declaration->m_Parameters[i]->m_ExpectedType).data();
+			throw RuntimeError(m_Declaration->m_Parameters[i]->m_Name, "Argument type mismatch, expected " + expectedType + ", but got " + actualType);
+		}
 		args[i].LockType();
 		env->Define(m_Declaration->m_Parameters[i]->m_Name, args[i]);
 	}

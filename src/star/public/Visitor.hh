@@ -18,7 +18,11 @@ namespace star
         struct Variable;
         struct Assignment;
         struct Logical;
-		struct Call;
+        struct Call;
+        struct Get;
+        struct Set;
+
+        //struct Throw;
 
         struct ExprVisitor
         {
@@ -33,7 +37,9 @@ namespace star
             virtual Value VisitVariableExpr(std::shared_ptr<Variable> expr) = 0;
             virtual Value VisitAssignmentExpr(std::shared_ptr<Assignment> expr) = 0;
 			virtual Value VisitLogicalExpr(std::shared_ptr<Logical> expr) = 0;
-			virtual Value VisitCallExpr(std::shared_ptr<Call> expr) = 0;
+            virtual Value VisitCallExpr(std::shared_ptr<Call> expr) = 0;
+            virtual Value VisitGetExpr(std::shared_ptr<Get> expr) = 0;
+            virtual Value VisitSetExpr(std::shared_ptr<Set> expr) = 0;
             virtual ~ExprVisitor() = default;
         };
 
@@ -54,10 +60,9 @@ namespace star
         struct Function;
         struct FunctionArgument;
         struct Return;
+        struct Class;
         //struct Switch;
         //struct Try;
-        //struct Throw;
-		
 
         struct StmtVisitor
         {
@@ -72,6 +77,7 @@ namespace star
             virtual Value VisitFunctionStmt(std::shared_ptr<Function> stmt) = 0;
             virtual Value VisitFunctionArgumentStmt(std::shared_ptr<FunctionArgument> stmt) = 0;
             virtual Value VisitReturnStmt(std::shared_ptr<Return> stmt) = 0;
+            virtual Value VisitClassStmt(std::shared_ptr<Class> stmt) = 0;
             virtual ~StmtVisitor() = default;
         };
 

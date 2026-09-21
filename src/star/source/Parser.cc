@@ -4,6 +4,7 @@
 #include "Visitor.hh"
 #include <memory>
 #include <sstream>
+#include <magic_enum/magic_enum.hpp>
 #define inner_assert(E)
 
 const std::unordered_map<std::string, star::VariableType> star::Parser::s_TypeKeywords = 
@@ -177,6 +178,8 @@ std::shared_ptr<star::Expression::Expr> star::Parser::Ternary()
         );
     }
 
+    //Throw expr;
+
     return expr;
 }
 
@@ -251,24 +254,13 @@ std::shared_ptr<star::Expression::Expr> star::Parser::Assignment()
         Token oper = Previous();
         std::shared_ptr<Expression::Expr> value = Assignment();
 
-        if (auto* variable = dynamic_cast<Expression::Variable*>(expr.get()))
+        if (Expression::Variable* variable = dynamic_cast<Expression::Variable*>(expr.get()))
         {
-            Token name = variable->m_Name;
+            return EvaluateRecursiveAssignment(variable, value, oper);
+        }
 
-            if (oper.m_Type != TokenType::EQUAL) {
-                auto it = s_BinaryOperators.find(oper.m_Type);
-                TokenType binaryType = it == s_BinaryOperators.end() ? TokenType::EQUAL : it->second;
-                value = std::make_shared<Expression::Binary>(
-					std::make_shared<Expression::Variable>(name),
-					Token(binaryType, oper.m_Lexeme, oper.m_Line, oper.m_Column, oper.m_Filepath),
-					value
-				);
-            }
-
-            return std::make_shared<Expression::Assignment>(
-				variable->m_Name,
-				value
-			);
+        if (Expression::Get* get = dynamic_cast<Expression::Get*>(expr.get())) {
+            return EvaluateRecursiveSet(get, value);
         }
 
         throw ParserException("Invalid assignment target.");
@@ -303,9 +295,16 @@ std::shared_ptr<star::Expression::Expr> star::Parser::LogicalAnd()
 std::shared_ptr<star::Expression::Expr> star::Parser::Call()
 {
     std::shared_ptr<star::Expression::Expr> expr = Primary();
-	while (Match(TokenType::LEFT_PAREN))
+	while (Check(TokenType::LEFT_PAREN) || Check(TokenType::DOT))
 	{
-		expr = FinishCall(expr);
+        if (Match(TokenType::LEFT_PAREN)) {
+            expr = FinishCall(expr);
+        }
+        if (Match(TokenType::DOT))
+        {
+            Token name = Consume(TokenType::IDENTIFIER, "Expected property name after '.'");
+            expr = std::make_shared<Expression::Get>(expr, name);
+        }
 	}
 
     Token name = Previous();
@@ -365,9 +364,10 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Declaration()
     try
     {
         if(Match(TokenType::VAR)) return VarDeclaration();
-        else if (Match(TokenType::AUTO)) return AutoDeclaration();
+        if(Match(TokenType::AUTO)) return AutoDeclaration();
 		//refactor this to use enums instead of strings
-        else if(Match(TokenType::FUN)) return Function("function");
+        if(Match(TokenType::FUN)) return Function(FunctionType::FUNCTION);
+		if(Match(TokenType::CLASS)) return ClassDeclaration();
 		else return Statement();
     }
     catch (const ParserException& e)
@@ -406,6 +406,38 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
     }
     Consume(TokenType::SEMICOLON, "Expected ; after variable declaration.");
     return std::make_shared<Statement::Auto>(name, init);
+}
+
+std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
+{
+    Token name = Consume(TokenType::IDENTIFIER, "Expected class name.");
+	Consume(TokenType::LEFT_BRACE, "Expected '{' after class name.");
+    std::vector<std::shared_ptr<Statement::Function>> methods;
+	std::vector<std::shared_ptr<Statement::Stmt>> fields;
+	while (!Check(TokenType::RIGHT_BRACE) && !IsAtEnd())
+	{
+        bool resolved = Check(TokenType::FUN) || Check(TokenType::VAR) || Check(TokenType::AUTO);
+        if (Match(TokenType::FUN))
+            methods.push_back(Function(FunctionType::METHOD));
+        if (Match(TokenType::VAR))
+            fields.push_back(VarDeclaration());
+        if (Match(TokenType::AUTO))
+            fields.push_back(AutoDeclaration());
+        if (Check(TokenType::IDENTIFIER))
+        {
+            Token methodName = Peek();
+            if (methodName.GetLexeme() == name.GetLexeme())
+            {
+                methods.push_back(Function(FunctionType::INITIALIZER));
+				resolved = true;
+            }
+        }
+        if(!resolved)
+            throw ParserException("Expected method or field.");
+	}
+	Consume(TokenType::RIGHT_BRACE, "Expected '}' after class.");
+
+    return std::make_shared<Statement::Class>(name, std::move(methods), std::move(fields));
 }
 
 std::vector<std::shared_ptr<star::Statement::Stmt>> star::Parser::Block()
@@ -496,12 +528,10 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ReturnStatement()
 	return std::make_shared<Statement::Return>(keyword, value);
 }
 
-std::shared_ptr<star::Statement::Function> star::Parser::Function(const std::string& kind)
+std::shared_ptr<star::Statement::Function> star::Parser::Function(const FunctionType& kind)
 {
-#ifdef DISPLAY_IMPROVEMENTS
-#error "improve this code to use kind parameter as an enum class"
-#endif
-	Token functionName = Consume(TokenType::IDENTIFIER, "Expected " + kind + " name.");
+    std::string magic = magic_enum::enum_name(kind).data();
+	Token functionName = Consume(TokenType::IDENTIFIER, "Expected " + magic + " name.");
 	
     std::vector<std::shared_ptr<Statement::FunctionArgument>> parameters;
 
@@ -524,7 +554,7 @@ std::shared_ptr<star::Statement::Function> star::Parser::Function(const std::str
 	VariableType returnType = MatchHashtag();
     Consume(TokenType::LEFT_BRACE, "Expected '{' after function declaration.");
     std::vector<std::shared_ptr<Statement::Stmt>> body = Block();
-    return std::make_shared<Statement::Function>(functionName, parameters, body, returnType);
+    return std::make_shared<Statement::Function>(functionName, parameters, body, kind == FunctionType::INITIALIZER ? VariableType::Void : returnType);
 }
 
 star::VariableType star::Parser::MatchHashtag()
@@ -559,6 +589,34 @@ star::Token star::Parser::Consume(const TokenType& token, const std::string& mes
     std::stringstream ss;
     ss << message << Peek().ToString();
     throw ParserException(ss.str());
+}
+
+std::shared_ptr<star::Expression::Expr> star::Parser::EvaluateRecursiveAssignment(Expression::Variable* variable, std::shared_ptr<Expression::Expr> value, const Token& oper)
+{
+    Token name = variable->m_Name;
+    if (oper.m_Type != TokenType::EQUAL) {
+        auto it = s_BinaryOperators.find(oper.m_Type);
+        TokenType binaryType = it == s_BinaryOperators.end() ? TokenType::EQUAL : it->second;
+        value = std::make_shared<Expression::Binary>(
+            std::make_shared<Expression::Variable>(name),
+            Token(binaryType, oper.m_Lexeme, oper.m_Line, oper.m_Column, oper.m_Filepath),
+            value
+        );
+    }
+
+    return std::make_shared<Expression::Assignment>(
+        variable->m_Name,
+        value
+    );
+}
+
+std::shared_ptr<star::Expression::Expr> star::Parser::EvaluateRecursiveSet(Expression::Get* getter, std::shared_ptr<Expression::Expr> value)
+{
+    return std::make_shared<Expression::Set>(
+        getter->m_Object, 
+        getter->m_Name, 
+        value
+    );
 }
 
 bool star::Parser::Check(const TokenType& type)

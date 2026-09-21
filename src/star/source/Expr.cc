@@ -126,3 +126,21 @@ star::Value star::Expression::Call::Accept(ExprVisitor& visitor)
 {
 	return visitor.VisitCallExpr(shared_from_this());
 }
+
+star::Expression::Get::Get(std::shared_ptr<Expr> object, Token name) :
+	m_Object{ std::move(object) }, m_Name{ std::move(name) }
+{}
+
+star::Value star::Expression::Get::Accept(ExprVisitor& visitor)
+{
+    return visitor.VisitGetExpr(shared_from_this());
+}
+
+star::Expression::Set::Set(std::shared_ptr<Expr> object, Token name, std::shared_ptr<Expr> value) :
+	m_Object{ std::move(object) }, m_Name{ std::move(name) }, m_Value{ std::move(value) }
+{}
+
+star::Value star::Expression::Set::Accept(ExprVisitor& visitor)
+{
+    return visitor.VisitSetExpr(shared_from_this());
+}

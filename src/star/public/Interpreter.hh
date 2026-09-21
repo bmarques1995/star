@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include "Function.hh"
+#include "Class.hh"
 
 namespace star
 {
@@ -17,9 +18,10 @@ namespace star
 		Value value;
 	};
 
-	class STAR_API Interpreter : public Expression::ExprVisitor, Statement::StmtVisitor
+	class STAR_API Interpreter : public Expression::ExprVisitor, Statement::StmtVisitor, std::enable_shared_from_this<Interpreter>
 	{
 		friend class Function;
+		friend class Class;
 	public:
 		Value VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr) override;
 		Value VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr) override;
@@ -33,6 +35,8 @@ namespace star
 		Value VisitAssignmentExpr(std::shared_ptr<Expression::Assignment> expr) override;
 		Value VisitLogicalExpr(std::shared_ptr<Expression::Logical> expr) override;
 		Value VisitCallExpr(std::shared_ptr<Expression::Call> expr) override;
+		Value VisitGetExpr(std::shared_ptr<Expression::Get> expr) override;
+		Value VisitSetExpr(std::shared_ptr<Expression::Set> expr) override;
 		
 		Interpreter();
 		virtual ~Interpreter() = default;
@@ -52,6 +56,7 @@ namespace star
 		Value VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt) override;
 		Value VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt) override;
 		Value VisitReturnStmt(std::shared_ptr<Statement::Return> stmt) override;
+		Value VisitClassStmt(std::shared_ptr<Statement::Class> stmt) override;
 
 		void RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable);
 		void Resolve(std::shared_ptr<Expression::Expr> expr, size_t depth);

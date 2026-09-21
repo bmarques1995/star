@@ -12,6 +12,8 @@
 namespace star
 {
 	class Callable;
+	class Class;
+	class Instance;
 	enum class VariableType
 	{
 		Null,
@@ -19,8 +21,6 @@ namespace star
 
 		Character,
 		String,
-
-		Callable,
 
 		Integer8,
 		Integer16,
@@ -34,6 +34,10 @@ namespace star
 
 		Float32,
 		Float64,
+
+		Callable,
+		Class,
+		Instance,
 
 		Void,
 		Dynamic
@@ -59,6 +63,7 @@ namespace star
 		friend class Interpreter;
 		friend class Environment;
 		friend class Function;
+		friend class Instance;
 	public:
 		using Storage = std::variant<
 			std::monostate,
@@ -66,8 +71,6 @@ namespace star
 
 			char8_t,
 			std::string,
-
-			std::shared_ptr<Callable>,
 
 			int8_t,
 			int16_t,
@@ -80,7 +83,11 @@ namespace star
 			uint64_t,
 
 			float,
-			double
+			double,
+
+			std::shared_ptr<Callable>,
+			std::shared_ptr<Class>,
+			std::shared_ptr<Instance>
 		>;
 
 		friend star::Value& operator-(star::Value& value);

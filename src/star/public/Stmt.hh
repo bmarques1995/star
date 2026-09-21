@@ -116,5 +116,15 @@ namespace star
 			Return(Token keyword, std::shared_ptr<star::Expression::Expr> value);
 			Value Accept(StmtVisitor& visitor) override;
 		};
+
+        struct STAR_API Class : public Stmt, public std::enable_shared_from_this<Class>
+        {
+            Token m_Name;
+			std::vector<std::shared_ptr<Statement::Function>> m_Methods;
+            std::vector<std::shared_ptr<Statement::Stmt>> m_Fields;
+
+			Class(Token name, std::vector<std::shared_ptr<Statement::Function>> methods, std::vector<std::shared_ptr<Statement::Stmt>> fields);
+			Value Accept(StmtVisitor& visitor) override;
+        };
 	}
 }

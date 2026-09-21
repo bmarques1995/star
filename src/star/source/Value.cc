@@ -1,6 +1,8 @@
 #include "Value.hh"
 #include "TokenType.hh"
 #include "Function.hh"
+#include "Class.hh"
+#include "Instance.hh"
 #include <cstdint>
 #include <sstream>
 #include <stdexcept>
@@ -55,17 +57,19 @@ const std::unordered_map<size_t, star::VariableType> star::Value::castedType =
 	{1, VariableType::Boolean},
 	{2, VariableType::Character},
 	{3, VariableType::String},
-    {4, VariableType::Callable},
-	{5, VariableType::Integer8},
-	{6, VariableType::Integer16},
-	{7, VariableType::Integer32},
-	{8, VariableType::Integer64},
-	{9, VariableType::Unsigned8},
-	{10, VariableType::Unsigned16},
-	{11, VariableType::Unsigned32},
-	{12, VariableType::Unsigned64},
-	{13, VariableType::Float32},
-	{14, VariableType::Float64}
+	{4, VariableType::Integer8},
+	{5, VariableType::Integer16},
+	{6, VariableType::Integer32},
+	{7, VariableType::Integer64},
+	{8, VariableType::Unsigned8},
+	{9, VariableType::Unsigned16},
+	{10, VariableType::Unsigned32},
+	{11, VariableType::Unsigned64},
+	{12, VariableType::Float32},
+	{13, VariableType::Float64},
+    {14, VariableType::Callable},
+    {15, VariableType::Class},
+    {15, VariableType::Instance}
 };
 
 star::Value::Value(TokenType type, std::string_view lexeme)
@@ -364,7 +368,9 @@ const std::string star::Value::ToString(const std::string& format) const
             {
                 return value ? "true" : "false";
             }
-            else if constexpr (std::is_same_v<T, std::shared_ptr<Callable>>)
+            else if constexpr (std::is_same_v<T, std::shared_ptr<Callable>> 
+                || std::is_same_v<T, std::shared_ptr<Class>>
+                || std::is_same_v<T, std::shared_ptr<Instance>>)
             {
                 return value->ToString();
             }
@@ -416,7 +422,9 @@ const std::string star::Value::StringifyString() const
             {
                 return helpers::StringifyString(value);
             }
-			else if constexpr (std::is_same_v<T, std::shared_ptr<Callable>>)
+			else if constexpr (std::is_same_v<T, std::shared_ptr<Callable>> 
+                || std::is_same_v<T, std::shared_ptr<Class>>
+                || std::is_same_v<T, std::shared_ptr<Instance>>)
 			{
 				return value->ToString();
 			}

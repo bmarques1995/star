@@ -180,6 +180,19 @@ star::Value star::Resolver::VisitCallExpr(std::shared_ptr<Expression::Call> expr
 	return {};
 }
 
+star::Value star::Resolver::VisitGetExpr(std::shared_ptr<Expression::Get> expr)
+{
+	Resolve(expr->m_Object);
+	return Value();
+}
+
+star::Value star::Resolver::VisitSetExpr(std::shared_ptr<Expression::Set> expr)
+{
+	Resolve(expr->m_Value);
+	Resolve(expr->m_Object);
+	return Value();
+}
+
 star::Value star::Resolver::VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt)
 {
 	Resolve(stmt->m_Expression);
@@ -268,4 +281,26 @@ star::Value star::Resolver::VisitReturnStmt(std::shared_ptr<Statement::Return> s
 	if (stmt->m_Value != nullptr) 
 		Resolve(stmt->m_Value);
 	return {};
+}
+
+star::Value star::Resolver::VisitClassStmt(std::shared_ptr<Statement::Class> stmt)
+{
+	Statement::FunctionArgument name{ stmt->m_Name, VariableType::Callable };
+	Declare(name);
+	Define(stmt->m_Name);
+
+	for(const auto& method : stmt->m_Methods)
+	{
+		std::vector<std::shared_ptr<Statement::FunctionArgument>> params = method->m_Parameters;
+
+		FunctionType declaration = FunctionType::METHOD;
+		ResolveFunction(params, method, declaration);
+	}
+
+	for(const auto& field: stmt->m_Fields)
+	{
+		Resolve(field);
+	}
+
+	return Value();
 }
