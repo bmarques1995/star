@@ -1,10 +1,6 @@
 # Star
 
-Star is a scripting language implemented in C++.
-
-The project was created to explore the design and implementation of a
-programming language, from lexical analysis and parsing through runtime
-execution.
+Star is a C++ scripting language and interpreter designed for embeddable, general-purpose scripting.
 
 > **Development status:** Star is currently under active development.
 > APIs, language features, and build infrastructure may change as the
@@ -12,13 +8,9 @@ execution.
 
 ## Overview
 
-Star is designed as a general-purpose scripting language with an
-interpreter implemented in C++.
+The project was created to supply a demand of easy embedding in C++, useful for game engines and any kid of program that requires scripting.
 
-The project focuses on providing a complete language implementation,
-including source-code scanning, parsing, abstract syntax tree
-construction, interpretation, runtime values, environments, functions,
-and object-oriented features.
+Was designed based on [this tutorial](https://www.udemy.com/course/aprenda-a-criar-sua-propria-linguagem-de-programacao), that was based on [Crafting Interpreters](https://craftinginterpreters.com/), so, Star has a lot of similarities with Lox, but will follow a different path.
 
 ## Embedding
 
@@ -45,7 +37,7 @@ target_link_libraries(target PUBLIC star::star)
 - Automated tests
 
 Additional language features are being developed as the project
-progresses.
+progresses. you can see the progress at the [roadmap](docs/roadmap.md)
 
 ## Getting Started
 
@@ -53,7 +45,7 @@ progresses.
 
 Star currently requires:
 
-- A C++ compiler with modern C++ support
+- A C++ compiler with modern C++ support (My recommendation, clang)
 - CMake
 - A supported build system generator
 
