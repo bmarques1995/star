@@ -5,11 +5,14 @@ All these features will be mandatory for the 1.0.0 release
 ## Grammar
 
 - [ ] const
+- [ ] namespaces
+- [ ] Import, export clauses
 - [ ] visibility modifiers
 - [ ] Newline, indent and dedent as tokens
 - [ ] Arrays and foreach statement
-- [ ] Enums and switch statement
+- [ ] Enums and switch statement (with case and default)
 - [ ] This and super
+- [ ] Try statement (with catch clause and throw expression)
 - [ ] Kwargs
 
 ## Runtime
@@ -42,3 +45,5 @@ All these features will be mandatory for the 1.0.0 release
 ## Infra
 
 - [ ] 95% Code Coverage
+- [ ] MacOS support
+- [ ] FreeBSD support
