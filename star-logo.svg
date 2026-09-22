@@ -1,0 +1,25 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 256 256"
+  width="256"
+  height="256"
+  role="img"
+  aria-label="Star programming language logo (outline version)"
+  style="--stroke-color: #d6461a;">
+
+  <path
+    d="M 196,158 Q 235,235 158,196"
+    fill="none"
+    stroke="var(--stroke-color)"
+    stroke-width="6"
+    stroke-linecap="round" />
+
+  <circle
+    cx="125"
+    cy="125"
+    r="78"
+    fill="var(--stroke-color)"
+    stroke="var(--stroke-color)"
+    stroke-width="6" />
+
+</svg>
