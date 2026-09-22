@@ -1,4 +1,4 @@
-# <img align="center" alt="Star" height="50" width="50" src="./star-logo.svg"> Star
+# Star
 
 Star is a scripting language implemented in C++.
 
@@ -108,8 +108,11 @@ cmake --build --preset <preset>
 For Linux distros I highly recommend llvm and clang compilers to develop, as clangd,
 for debian based distros, just run:
 
-`sudo apt update -y`
-`sudo apt install clang clang++ llvm lldb clangd -y`
+```sh
+sudo apt update -y
+sudo apt install clang clang++ llvm lldb clangd ninja-build -y
+```
+
 
 ### Running
 
@@ -173,5 +176,17 @@ Star is distributed under the BSD 3-Clause License.
 See [LICENSE](LICENSE) for the complete license text.
 
 Third-party dependencies are distributed under their respective
-licenses. See [THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt)
+licenses. See [third_party_licensing.txt](third_party_licensing.txt)
 for their license information.
+
+## Trade
+
+Star has a provisory icon: 
+
+<img align="center" alt="Star" height="64" width="64" src="./star-logo.svg">
+
+If you are a designer and would like to improve Star's logo, just open an issue, consider also add star as a sticker
+
+## Get In Touch
+
+The easiest way to get in touch is open an issue, there are also my social media, [LinkedIn](https://www.linkedin.com/in/bruno-silva-marques)
