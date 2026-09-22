@@ -29,7 +29,7 @@ target_installation_behaviour(TARGET_NAME ${TARGET_NAME}
                               CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in
                               VERSION ${PROJECT_VERSION}
                               PROJECT_NAME ${PROJECT_NAME}
-                              NAMESPACE star::
-                              COMPONENT star)
+                              NAMESPACE ${PROJECT_CMAKE_NAMESPACE}
+                              COMPONENT ${PROJECT_CMAKE_NAMESPACE})
 deploy_runtime_dependencies(${TARGET_NAME})
 install_runtime_dependencies_for_libs(TARGETS GTest::gtest GTest::gtest_main)

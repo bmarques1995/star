@@ -9,6 +9,7 @@ option(STAR_ENABLE_LLVM_COVERAGE "Enable LLVM source coverage" OFF)
 option(STAR_ENABLE_PACKAGING "Enable modify exec name" OFF)
 option(BUILD_SHARED_LIBS "Build star as a shared lib" OFF)
 
+set(PROJECT_CMAKE_NAMESPACE star)
 set(STAR_COMPILE_ECOSYS)
 if(MSVC)
     set(STAR_COMPILE_ECOSYS "msvc")

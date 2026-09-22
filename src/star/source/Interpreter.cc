@@ -8,7 +8,7 @@
 #include "Instance.hh"
 #include <sstream>
 #include <variant>
-#include "Escape.hh"
+#include "builtin/Escape.hh"
 
 star::Interpreter::Interpreter()
 {

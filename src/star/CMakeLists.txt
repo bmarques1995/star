@@ -13,8 +13,7 @@ set_artifacts_dir(${TARGET_NAME} ${PROJECT_BINARY_DIR})
 set_msvc_target_utf8(${TARGET_NAME})
 set_msvc_debug_improvements(${TARGET_NAME})
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>
-                                                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public/builtin>
-                                                 $<INSTALL_INTERFACE:include>
+                                                 $<INSTALL_INTERFACE:include/star>
                                           PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
                                                   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/private>)
 target_link_libraries(${TARGET_NAME} PRIVATE magic_enum::magic_enum
@@ -42,10 +41,13 @@ endif()
 
 target_installation_behaviour(TARGET_NAME ${TARGET_NAME}
                               CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in
+                              USE_SHARE TRUE
                               VERSION ${PROJECT_VERSION}
                               PROJECT_NAME ${PROJECT_NAME}
-                              NAMESPACE star::
-                              COMPONENT star)
+                              NAMESPACE ${PROJECT_CMAKE_NAMESPACE}
+                              COMPONENT ${PROJECT_CMAKE_NAMESPACE}
+                              HEADER_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/public/
+                              HEADER_OUTPUT include/star)
 
 deploy_runtime_dependencies(${TARGET_NAME})
 install_runtime_dependencies_for_libs(TARGETS magic_enum::magic_enum PCRE2::8BIT PCRE2::POSIX fmt::fmt)

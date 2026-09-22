@@ -7,8 +7,8 @@ set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
 set_artifacts_dir(${TARGET_NAME} ${PROJECT_BINARY_DIR})
 set_msvc_target_utf8(${TARGET_NAME})
 set_msvc_debug_improvements(${TARGET_NAME})
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                                                 $<INSTALL_INTERFACE:include>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>
+                                                 $<INSTALL_INTERFACE:include/star_cli>)
 target_link_libraries(${TARGET_NAME} PRIVATE star)
 
 if(WIN32)
@@ -21,8 +21,11 @@ endif()
 target_installation_behaviour(TARGET_NAME ${TARGET_NAME}
                               CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in
                               VERSION ${PROJECT_VERSION}
+                              USE_SHARE TRUE
                               PROJECT_NAME ${PROJECT_NAME}
-                              NAMESPACE star::
-                              COMPONENT star)
+                              NAMESPACE ${PROJECT_CMAKE_NAMESPACE}
+                              COMPONENT ${PROJECT_CMAKE_NAMESPACE}
+                              HEADER_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/public/
+                              HEADER_OUTPUT include/star_cli)
 
 deploy_runtime_dependencies(${TARGET_NAME})
