@@ -25,7 +25,7 @@ and object-oriented features.
 Star's runtime was designed to be easily embedded in C++ Applications, is a key feature. It adds a cmake target that can be easily integrated with cmake:
 
 ``` cmake
-find_package(star REQUIRED)
+find_package(Starlang REQUIRED)
 target_link_libraries(target PUBLIC star::star)
 ```
 
@@ -110,7 +110,7 @@ for debian based distros, just run:
 
 ```sh
 sudo apt update -y
-sudo apt install clang clang++ llvm lldb clangd ninja-build -y
+sudo apt install clang clang++ llvm lldb clangd ninja-build cmake -y
 ```
 
 
