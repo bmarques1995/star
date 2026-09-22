@@ -275,6 +275,7 @@ star::Value star::Interpreter::VisitSetExpr(std::shared_ptr<Expression::Set> exp
         {
             Value value = Evaluate(expr->m_Value);
             shard->Set(expr->m_Name, value);
+            return {};
         }
         else
         {

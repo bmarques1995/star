@@ -14,8 +14,8 @@
             "name": "redist-release",
             "hidden": true,
             "cacheVariables": {
-                "STAR_MODIFY_EXEC_NAME": true,
-                "BUILD_TESTS": false
+                "STAR_ENABLE_PACKAGING": true,
+                "STAR_BUILD_TESTS": false
             }
         },
         {
