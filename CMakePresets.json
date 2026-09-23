@@ -62,7 +62,7 @@
             
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_LLVM_COVERAGE": true
+                "STAR_ENABLE_LLVM_COVERAGE": true
             }
         },
         {
