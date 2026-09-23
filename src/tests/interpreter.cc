@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
+#include <memory>
 #include <string>
+#include "Callable.hh"
 #include "Scanner.hh"
 #include "Parser.hh"
 #include "Interpreter.hh"
+#include "mockPrint.hh"
 
 namespace star
 {
@@ -12,8 +15,9 @@ namespace star
     public:
         MockInterpreter()
         {
-
+            RegisterCallable("print", std::make_shared<MockPrint>(&m_Result));
         }
+        
         ~MockInterpreter() = default;
 
         const std::string& GetText()
