@@ -3,9 +3,9 @@
 set -eu
 
 if [ "$#" -ne 1 ]; then
-    echo "Uso: $0 <diretorio-do-preset>"
+    echo "Usage: $0 <preset-dir>"
     echo
-    echo "Exemplo:"
+    echo "Example:"
     echo "  $0 build/debug"
     exit 1
 fi
