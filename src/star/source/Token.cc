@@ -42,3 +42,11 @@ const std::string& star::Token::GetLexeme() const
 {
     return m_Lexeme;
 }
+
+std::string star::Token::StringSerialize() const
+{
+    std::stringstream ss;
+    ss << "{ TokenType::" << magic_enum::enum_name(m_Type).data() << " ,\"" << m_Lexeme << "\", " << m_Line << ", " << m_Column << ", \"" << m_Filepath << "\" }";
+    std::string strToken = ss.str();
+    return strToken;
+}

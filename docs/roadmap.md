@@ -17,7 +17,7 @@ All these features will be mandatory for the 1.0.0 release
 
 ## Runtime
 
-
+- [ ] Intermediate Representation
 - [ ] Numeric Dispatcher (more details [here](grammar/number_system.md##Numeric-Dispatcher))
 - [ ] C3 Superclass linearization, for multiple inheritance
 - [ ] Compiled mode

@@ -17,6 +17,7 @@ namespace star
         std::string ToString() const;
         const TokenType GetTokenType() const;
         const std::string& GetLexeme() const;
+        std::string StringSerialize() const;
 
     private:
         TokenType m_Type;
