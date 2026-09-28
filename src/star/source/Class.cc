@@ -22,14 +22,14 @@ star::Class::Class(const Token& name,
 	}
 }
 
-const size_t star::Class::Arity() const
-{
-	return 0;
-}
-
 std::string star::Class::ToString() const
 {
 	return m_Name.GetLexeme();
+}
+
+const star::VariableType star::Class::ExpectedReturnType() const
+{
+	return VariableType::Void;
 }
 
 std::optional<std::shared_ptr<star::Function>> star::Class::FindMethod(const std::string& name) const

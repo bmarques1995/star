@@ -13,7 +13,8 @@
 star::Interpreter::Interpreter()
 {
 	m_Global.reset(new Environment());
-    m_Global->Define(Token{ TokenType::FUN, "escape", 1, 1, "::native" }, Value{ std::make_shared<Escape>() });
+    m_BuiltinsFunctions["escape"] = std::make_shared<Escape>();
+    m_Global->Define(Token{ TokenType::FUN, "escape", 1, 1, "::native" }, Value{ m_BuiltinsFunctions["escape"] });
     m_CurrentEnv = m_Global;
 }
 
@@ -190,8 +191,8 @@ star::Value star::Interpreter::VisitAssignmentExpr(std::shared_ptr<Expression::A
     auto elem = locals.find(expr);
     if (elem != locals.end())
     {
-        size_t distance = elem->second;
-        m_CurrentEnv.lock()->ReassignAt(expr->m_Name, value, distance);
+        size_t scope = elem->second;
+        m_CurrentEnv.lock()->ReassignAt(expr->m_Name, value, scope);
     }
     else
     {
@@ -337,8 +338,8 @@ star::Value star::Interpreter::LookupVariable(const Token& name, std::shared_ptr
     auto elem = locals.find(expr);
     if (elem != locals.end())
 	{
-		size_t distance = elem->second;
-	    return m_CurrentEnv.lock()->GetAt(name, distance);
+		size_t scope = elem->second;
+	    return m_CurrentEnv.lock()->GetAt(name, scope);
     }
 	else
     {
@@ -351,8 +352,8 @@ star::Value* star::Interpreter::LookupVariablePtr(const Token& name, std::shared
     auto elem = locals.find(expr);
     if (elem != locals.end())
     {
-        size_t distance = elem->second;
-        return m_CurrentEnv.lock()->GetAsPtrAt(name, distance);
+        size_t scope = elem->second;
+        return m_CurrentEnv.lock()->GetAsPtrAt(name, scope);
     }
     else
     {
@@ -519,10 +520,16 @@ star::Value star::Interpreter::VisitClassStmt(std::shared_ptr<Statement::Class> 
 
 void star::Interpreter::RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable)
 {
+    m_BuiltinsFunctions[name] = callable;
     m_CurrentEnv.lock()->Define(Token{ TokenType::FUN, name, 1, 1, "::native" }, { callable });
 }
 
 void star::Interpreter::Resolve(std::shared_ptr<Expression::Expr> expr, size_t depth)
 {
     locals[expr] = depth;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<star::Callable>>& star::Interpreter::GetBuiltinsFunctions() const
+{
+    return m_BuiltinsFunctions;
 }

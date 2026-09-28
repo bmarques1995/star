@@ -23,6 +23,7 @@ namespace star
 
 		void Resolve(std::shared_ptr<Statement::Stmt> statement);
 		void Resolve(std::shared_ptr<Expression::Expr> expression);
+		void Resolve(const std::string& callableName, const std::shared_ptr<Callable>& callable);
 
 		void ResolveLocal(std::shared_ptr<Expression::Expr> expression, Token& name);
 		void ResolveFunction(std::vector<std::shared_ptr<Statement::FunctionArgument>> arguments, std::shared_ptr<Statement::Function> function, FunctionType type);
@@ -37,6 +38,7 @@ namespace star
 		Resolver(std::shared_ptr<Interpreter>& interpreter);
 		~Resolver();
 		void Resolve(std::vector<std::shared_ptr<Statement::Stmt>>& statements);
+		void RegisterBuiltinFunctions(const std::unordered_map<std::string, std::shared_ptr<Callable>>& functions);
 
 		Value VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr) override;
 		Value VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr) override;

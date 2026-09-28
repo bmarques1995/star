@@ -28,14 +28,14 @@ void star::Instance::Set(const Token& name, Value& value)
 	m_Fields[name.GetLexeme()] = std::move(value);
 }
 
-const size_t star::Instance::Arity() const
-{
-	return size_t();
-}
-
 star::Value star::Instance::Call(Interpreter& interpreter, std::vector<Value> arguments)
 {
 	return Value();
+}
+
+const star::VariableType star::Instance::ExpectedReturnType() const
+{
+	return VariableType::Void;
 }
 
 std::string star::Instance::ToString() const

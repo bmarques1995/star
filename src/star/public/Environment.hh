@@ -13,6 +13,7 @@ namespace star
 	private:
 		std::unordered_map<std::string, Value> m_Values;
 		std::weak_ptr<Environment> m_Parent;
+		size_t m_ScopeLevel;
 
 		void TempUnlock(std::shared_ptr<Environment>* dest, std::weak_ptr<Environment>* src);
 	public:

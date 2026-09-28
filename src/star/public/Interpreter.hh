@@ -60,6 +60,7 @@ namespace star
 
 		void RegisterCallable(const std::string& name, std::shared_ptr<Callable> callable);
 		void Resolve(std::shared_ptr<Expression::Expr> expr, size_t depth);
+		const std::unordered_map<std::string, std::shared_ptr<Callable>>& GetBuiltinsFunctions() const;
 
 	protected:
 		void CheckNumberOperand(const Token& oper, const Value& operand);
@@ -73,6 +74,7 @@ namespace star
 		Value* LookupVariablePtr(const Token& name, std::shared_ptr<Expression::Expr> expr);
 
 		std::unordered_map<std::shared_ptr<Expression::Expr>, size_t> locals;
+		std::unordered_map<std::string, std::shared_ptr<Callable>> m_BuiltinsFunctions;
 		std::weak_ptr<Environment> m_CurrentEnv;
 		std::shared_ptr<Environment> m_Global;
 	};

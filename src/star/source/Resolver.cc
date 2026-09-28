@@ -11,15 +11,35 @@ void star::Resolver::Resolve(std::shared_ptr<Expression::Expr> expression)
 	expression->Accept(*this);
 }
 
+void star::Resolver::Resolve(const std::string& callableName, const  std::shared_ptr<Callable>& function)
+{
+	FunctionType chainingFunction = m_CurrentFunctionType;
+	FunctionType currentType = FunctionType::FUNCTION;
+	BeginScope();
+	for (auto& argument : function->ExpectedArgs())
+	{
+		Declare(*(argument.get()));
+		Define(argument->m_Name);
+	}
+	EndScope();
+	m_CurrentFunctionType = chainingFunction;
+}
+
 void star::Resolver::ResolveLocal(std::shared_ptr<Expression::Expr> expression, Token& name)
 {
-	size_t scopeSize = scopes.size();
-	for (size_t i = 0; i < scopeSize; i++)
+	//size_t scopeIndex = scopes.size() - 1;
+	//if (scopes[scopeIndex].find(name.GetLexeme()) != scopes[scopeIndex].end()) {
+	//	m_Interpreter->Resolve(expression, scopeIndex);
+	//	return;
+	//}
+
+	size_t level = scopes.size() - 1;
+
+	for (auto it = scopes.rbegin(); it != scopes.rend(); ++it, --level)
 	{
-		size_t index = scopeSize - i - 1;
-		if (scopes[index].find(name.GetLexeme()) != scopes[index].end()) {
-			identifiers[index].erase(name);
-			m_Interpreter->Resolve(expression, i);
+		if (it->find(name.GetLexeme()) != it->end())
+		{
+			m_Interpreter->Resolve(expression, level);
 			return;
 		}
 	}
@@ -81,6 +101,7 @@ star::Resolver::Resolver(std::shared_ptr<Interpreter>& interpreter) :
 	m_Interpreter(interpreter)
 {
 	BeginScope();
+	RegisterBuiltinFunctions(m_Interpreter->GetBuiltinsFunctions());
 }
 
 star::Resolver::~Resolver()
@@ -90,8 +111,26 @@ star::Resolver::~Resolver()
 
 void star::Resolver::Resolve(std::vector<std::shared_ptr<Statement::Stmt>>& statements)
 {
-	for(auto& statement : statements)
+	size_t index = 0;
+	for (auto& statement : statements)
+	{
 		Resolve(statement);
+		index++;
+	}
+}
+
+void star::Resolver::RegisterBuiltinFunctions(const std::unordered_map<std::string, std::shared_ptr<Callable>>& functions)
+{
+	
+	for (auto& function : functions)
+	{
+		Token funName{ TokenType::FUN, function.first, 0, 0, "::native" };
+		Statement::FunctionArgument name{ funName, function.second->ExpectedReturnType() };
+		Declare(name);
+		Define(name.m_Name);
+		Resolve(function.first, function.second);
+	}
+		
 }
 
 star::Value star::Resolver::VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr)
@@ -147,13 +186,15 @@ star::Value star::Resolver::VisitTernaryExpr(std::shared_ptr<Expression::Ternary
 
 star::Value star::Resolver::VisitVariableExpr(std::shared_ptr<Expression::Variable> expr)
 {
-	if (!scopes.empty()) {
-		auto& currentScope = scopes.back();
-		auto elem = currentScope.find(expr->m_Name.GetLexeme());
-		if (elem != currentScope.end() && elem->second == false) {
-			throw RuntimeError(expr->m_Name, "Can't read local variable in this own initializer.");
-		}
+	size_t scopeIndex = scopes.size() - 1;
+	auto it = identifiers.rbegin();
+	while (it != identifiers.rend() && it->find(expr->m_Name) == it->end())
+	{
+		it++;
+		scopeIndex--;
 	}
+	if(it == identifiers.rend())
+		throw RuntimeError(expr->m_Name, "Undefined variable '" + expr->m_Name.GetLexeme() + "'.");
 	ResolveLocal(expr, expr->m_Name);
 	return {};
 }

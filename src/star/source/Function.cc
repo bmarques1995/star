@@ -6,11 +6,15 @@
 star::Function::Function(std::shared_ptr<Statement::Function> declaration, std::weak_ptr<Environment> chaining) :
 	m_Declaration(declaration), m_Chaining(chaining)
 {
+	m_Arity = m_Declaration->m_Parameters.size();
+	for(const auto& param : m_Declaration->m_Parameters)
+		m_ExpectedArgs.push_back(param);
+	m_ReturnType = m_Declaration->m_ExpectedType;
 }
 
-const size_t star::Function::Arity() const
+const star::VariableType star::Function::ExpectedReturnType() const
 {
-	return m_Declaration->m_Parameters.size();
+	return m_ReturnType;
 }
 
 std::string star::Function::ToString() const

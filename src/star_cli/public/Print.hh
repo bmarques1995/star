@@ -12,12 +12,10 @@ namespace star
 		Print();
 		~Print() = default;
 		
-		const size_t Arity() const override;
+		const VariableType ExpectedReturnType() const override;
+
 		std::string ToString() const override;
 
 		Value Call(Interpreter& m_Interpreter, std::vector<Value> args) override;
-	public:
-		size_t m_Arity;
-
 	};
 }

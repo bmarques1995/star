@@ -12,12 +12,11 @@ namespace star
 		Escape();
 		~Escape() = default;
 
-		const size_t Arity() const override;
+		const VariableType ExpectedReturnType() const override;
 		std::string ToString() const override;
 		
 		Value Call(Interpreter& interpreter, std::vector<Value> args) override;
 	private:
 		size_t m_Arity;
-		std::vector<VariableType> m_ExpectedTypes;
 	};
 }

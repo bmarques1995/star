@@ -15,12 +15,13 @@ namespace star
     public:
         Function(std::shared_ptr<Statement::Function> declaration, std::weak_ptr<Environment> chaining);
 
-        const size_t Arity() const override;
+        const VariableType ExpectedReturnType() const override;
         std::string ToString() const override;
         Value Call(Interpreter& interpreter, std::vector<Value> args) override;
 
     private:
         std::shared_ptr<Statement::Function> m_Declaration;
         std::weak_ptr<Environment> m_Chaining;
+        VariableType m_ReturnType;
     };
 }

@@ -2,18 +2,18 @@
 #include "Console.hh"
 
 star::Print::Print() 
-	: m_Arity(1)
+	: Callable(1, { { "printArg", VariableType::String }})
 {
-}
-
-const size_t star::Print::Arity() const
-{
-	return m_Arity;
 }
 
 std::string star::Print::ToString() const
 {
-	return "<print>";
+	return "<print: void>";
+}
+
+const star::VariableType star::Print::ExpectedReturnType() const
+{
+	return VariableType::Void;
 }
 
 star::Value star::Print::Call(Interpreter& m_Interpreter, std::vector<Value> args)

@@ -6,6 +6,7 @@
 star::Environment::Environment() :
 	m_Parent()
 {
+	m_ScopeLevel = 0;
 #ifdef STAR_DEBUG
 	m_EnvName = "";
 #endif
@@ -14,6 +15,7 @@ star::Environment::Environment() :
 star::Environment::Environment(std::weak_ptr<Environment> parent) :
 	m_Parent(parent)
 {
+	m_ScopeLevel = m_Parent.expired() ? 0 : m_Parent.lock()->m_ScopeLevel + 1;
 #ifdef STAR_DEBUG
 	m_EnvName = "";
 #endif

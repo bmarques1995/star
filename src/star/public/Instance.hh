@@ -22,8 +22,8 @@ namespace star
         Value Get(const Token& name);
         void Set(const Token& name, Value& value);
 
-        const size_t Arity() const override;
         Value Call(Interpreter& interpreter, std::vector<Value> arguments) override;
+        const VariableType ExpectedReturnType() const override;
         std::string ToString() const override;
     };
 }

@@ -3,19 +3,18 @@
 #include "EscapeObject.hh"
 
 star::Escape::Escape() :
-	m_Arity(1),
-	m_ExpectedTypes({ VariableType::Integer32 })
+	Callable(1, { {"escapeArg", VariableType::Integer32} })
 {
-}
-
-const size_t star::Escape::Arity() const
-{
-	return m_Arity;
 }
 
 std::string star::Escape::ToString() const
 {
-	return "<exit: void>";
+	return "<escape: void>";
+}
+
+const star::VariableType star::Escape::ExpectedReturnType() const
+{
+	return VariableType::Void;
 }
 
 star::Value star::Escape::Call(Interpreter& interpreter, std::vector<Value> args)

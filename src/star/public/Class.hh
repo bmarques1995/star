@@ -19,8 +19,8 @@ namespace star
 			Interpreter& interpreter
 		);
 
-		const size_t Arity() const override;
 		std::string ToString() const override;
+		const VariableType ExpectedReturnType() const override;
 		std::optional<std::shared_ptr<Function>> FindMethod(const std::string& name) const;
 
 		Value Call(Interpreter& interpreter, std::vector<Value> args) override;
