@@ -27,21 +27,11 @@ void star::Resolver::Resolve(const std::string& callableName, const  std::shared
 
 void star::Resolver::ResolveLocal(std::shared_ptr<Expression::Expr> expression, Token& name)
 {
-	//size_t scopeIndex = scopes.size() - 1;
-	//if (scopes[scopeIndex].find(name.GetLexeme()) != scopes[scopeIndex].end()) {
-	//	m_Interpreter->Resolve(expression, scopeIndex);
-	//	return;
-	//}
-
-	size_t level = scopes.size() - 1;
-
-	for (auto it = scopes.rbegin(); it != scopes.rend(); ++it, --level)
+	size_t scopeIndex = scopes.size() - 1;
+	if (scopes[scopeIndex].find(name.GetLexeme()) != scopes[scopeIndex].end()) 
 	{
-		if (it->find(name.GetLexeme()) != it->end())
-		{
-			m_Interpreter->Resolve(expression, level);
-			return;
-		}
+		m_Interpreter->Resolve(expression, scopeIndex);
+		return;
 	}
 }
 
