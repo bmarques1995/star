@@ -400,10 +400,8 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
 {
     Token name = Consume(TokenType::IDENTIFIER, "Expected variable name.");
     std::shared_ptr<Expression::Expr> init = nullptr;
-    if (Match(TokenType::EQUAL))
-    {
-        init = Expression();
-    }
+    Consume(TokenType::EQUAL, "Auto declaration requires an initializer.");
+    init = Expression();
     Consume(TokenType::SEMICOLON, "Expected ; after variable declaration.");
     return std::make_shared<Statement::Auto>(name, init);
 }
