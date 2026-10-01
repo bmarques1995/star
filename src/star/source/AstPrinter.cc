@@ -3,23 +3,25 @@
 #include "Value.hh"
 #include <memory>
 #include <sstream>
-#define inner_assert(E) // REMOVER DEPOIS
 
-std::string star::AstPrinter::Print(std::shared_ptr<Expression::Expr> expr)
+void star::AstPrinter::Print(std::shared_ptr<Statement::Stmt> stmt)
 {
-    return expr->Accept(*this).ToString();
+    stmt->Accept(*this);
+}
+
+star::Value star::AstPrinter::VisitPostIncrementExpr(std::shared_ptr<Expression::PostIncrement> expr)
+{
+    return Value();
 }
 
 star::Value star::AstPrinter::VisitBinaryExpr(std::shared_ptr<Expression::Binary> expr)
 {
-    return Value{TokenType::STRING,
-        Parenthesize(expr->m_Operator.GetLexeme(), expr->m_Left, expr->m_Right)};
+    return Value{};
 }
 
 star::Value star::AstPrinter::VisitGroupingExpr(std::shared_ptr<Expression::Grouping> expr)
 {
-    return Value{TokenType::STRING,
-        Parenthesize("group", expr->m_Expression)};
+    return Value{};
 }
 
 star::Value star::AstPrinter::VisitLiteralExpr(std::shared_ptr<Expression::Literal> expr)
@@ -29,45 +31,105 @@ star::Value star::AstPrinter::VisitLiteralExpr(std::shared_ptr<Expression::Liter
 
 star::Value star::AstPrinter::VisitUnaryExpr(std::shared_ptr<Expression::Unary> expr)
 {
-  return Value{TokenType::STRING, 
-    Parenthesize(expr->m_Operator.GetLexeme(), expr->m_Right)};
+  return Value{};
+}
+
+star::Value star::AstPrinter::VisitPreIncrementExpr(std::shared_ptr<Expression::PreIncrement> expr)
+{
+    return Value();
 }
 
 star::Value star::AstPrinter::VisitTemplateLiteralExpr(std::shared_ptr<Expression::TemplateLiteral> expr)
 {
-    return Value{TokenType::STRING, 
-        Parenthesize("template string", expr)};
+    return Value{};
 }
 
 star::Value star::AstPrinter::VisitTernaryExpr(std::shared_ptr<Expression::Ternary> expr)
 {
-    return Value{TokenType::STRING, 
-        Parenthesize("ternary", expr)};
+    return Value{};
 }
 
-template<class... E>
-std::string star::AstPrinter::Parenthesize(std::string_view name, E... expr)
+star::Value star::AstPrinter::VisitVariableExpr(std::shared_ptr<Expression::Variable> expr)
 {
-  inner_assert((... && std::is_same_v<E, std::shared_ptr<Expr>>));
-  std::ostringstream buffer;
-  buffer << "(" << name;
-  ((buffer << " " << Print(expr)), ...);
-  buffer << ")";
-  return buffer.str();
+    return Value();
 }
 
-/*int main(){
-  auto expression = std::make_shared<Binary>(
-      std::make_shared<Unary>(
-        Token(TokenType::MINUS, "-", nullptr, 1), 
-        std::make_shared<Literal>(123)
-      ),
-      Token(TokenType::STAR, "*", nullptr, 1),
-      std::make_shared<Grouping>(
-       std::make_shared<Literal>(45.67)
-      )
-  );
+star::Value star::AstPrinter::VisitAssignmentExpr(std::shared_ptr<Expression::Assignment> expr)
+{
+    return Value();
+}
 
-  AstPrinter printer;
-  std::cout << printer.print(expression) << '\n';
-}*/
+star::Value star::AstPrinter::VisitLogicalExpr(std::shared_ptr<Expression::Logical> expr)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitCallExpr(std::shared_ptr<Expression::Call> expr)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitGetExpr(std::shared_ptr<Expression::Get> expr)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitSetExpr(std::shared_ptr<Expression::Set> expr)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitExpressionStmt(std::shared_ptr<Statement::Expression> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitVariableStmt(std::shared_ptr<Statement::Variable> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitAutoStmt(std::shared_ptr<Statement::Auto> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitBlockStmt(std::shared_ptr<Statement::Block> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitIfStmt(std::shared_ptr<Statement::If> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitWhileStmt(std::shared_ptr<Statement::While> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitForStmt(std::shared_ptr<Statement::ForLoop> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitFunctionStmt(std::shared_ptr<Statement::Function> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitFunctionArgumentStmt(std::shared_ptr<Statement::FunctionArgument> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitReturnStmt(std::shared_ptr<Statement::Return> stmt)
+{
+    return Value();
+}
+
+star::Value star::AstPrinter::VisitClassStmt(std::shared_ptr<Statement::Class> stmt)
+{
+    return Value();
+}
