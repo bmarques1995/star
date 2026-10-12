@@ -40,7 +40,7 @@ namespace star
 			{ TokenType::LEFT_PAREN, "(", 1, 5, "::repl"},
 			{ TokenType::STRING, "Hello String", 1, 6, "::repl"},
 			{ TokenType::RIGHT_PAREN, ")", 1, 20, "::repl" },
-			{ TokenType::SEMICOLON, ";", 1, 21, "::repl"},
+			{ TokenType::NEWLINE, "\n", 1, 21, "::repl"},
 			{ TokenType::ST_EOF, "", 3, 0, "::repl"},
 		};
 		Parser parser{ tokens };
@@ -67,7 +67,7 @@ namespace star
 			{ TokenType::COLON ,":", 1, 17, "::repl" },
 			{ TokenType::NUMBER ,"7", 1, 19, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 20, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 21, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 21, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -94,7 +94,7 @@ namespace star
 			{ TokenType::COLON ,":", 1, 17, "::repl" },
 			{ TokenType::NUMBER ,"7", 1, 19, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 20, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 21, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 21, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -121,7 +121,7 @@ namespace star
 			{ TokenType::COLON ,":", 1, 18, "::repl" },
 			{ TokenType::NUMBER ,"7", 1, 20, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 21, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 22, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 22, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -148,7 +148,7 @@ namespace star
 			{ TokenType::COLON ,":", 1, 18, "::repl" },
 			{ TokenType::NUMBER ,"7", 1, 20, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 21, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 22, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 22, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		//for(auto& token : tokens) std::cout << token.StringSerialize() << "," << std::endl;
@@ -174,7 +174,7 @@ namespace star
 			{ TokenType::PLUS ,"+", 1, 12, "::repl" },
 			{ TokenType::NUMBER ,"3", 1, 14, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 15, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 16, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 16, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -201,7 +201,7 @@ namespace star
 			{ TokenType::NUMBER ,"3", 1, 15, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 16, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 17, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 18, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 18, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -223,7 +223,7 @@ namespace star
 			{ TokenType::BANG ,"!", 1, 6, "::repl" },
 			{ TokenType::ST_TRUE ,"true", 1, 7, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 11, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 12, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 12, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		/*std::cout << "std::vector<Token> tokens = \n{\n";
@@ -248,7 +248,7 @@ namespace star
 			{ TokenType::BANG ,"!", 1, 6, "::repl" },
 			{ TokenType::ST_FALSE ,"false", 1, 7, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 12, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 13, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 13, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -270,7 +270,7 @@ namespace star
 			{ TokenType::MINUS ,"-", 1, 6, "::repl" },
 			{ TokenType::NUMBER ,"5", 1, 7, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 8, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 9, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 9, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" },
 		};
 		Parser parser{ tokens };
@@ -304,7 +304,7 @@ namespace star
 			{ TokenType::STR_EXPR_END ,"", 1, 93, "::repl" },
 			{ TokenType::TEMPLATE_STRING_END ,"", 1, 94, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 94, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 95, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 95, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -335,7 +335,7 @@ namespace star
 			{ TokenType::GREATER ,">", 1, 24, "::repl" },
 			{ TokenType::NUMBER ,"4", 1, 26, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 27, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 28, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 28, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -366,7 +366,7 @@ namespace star
 			{ TokenType::GREATER_EQUAL ,">=", 1, 26, "::repl" },
 			{ TokenType::NUMBER ,"4", 1, 29, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 30, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 31, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 31, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -397,7 +397,7 @@ namespace star
 			{ TokenType::LESS ,"<", 1, 24, "::repl" },
 			{ TokenType::NUMBER ,"5", 1, 26, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 27, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 28, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 28, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -428,7 +428,7 @@ namespace star
 			{ TokenType::LESS_EQUAL ,"<=", 1, 26, "::repl" },
 			{ TokenType::NUMBER ,"5", 1, 29, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 30, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 31, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 31, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };
@@ -451,7 +451,7 @@ namespace star
 			{ TokenType::MOD ,"%", 1, 7, "::repl" },
 			{ TokenType::NUMBER ,"2", 1, 8, "::repl" },
 			{ TokenType::RIGHT_PAREN ,")", 1, 9, "::repl" },
-			{ TokenType::SEMICOLON ,";", 1, 10, "::repl" },
+			{ TokenType::NEWLINE, "\n", 1, 10, "::repl" },
 			{ TokenType::ST_EOF ,"", 3, 0, "::repl" }
 		};
 		Parser parser{ tokens };

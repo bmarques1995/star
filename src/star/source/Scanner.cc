@@ -144,6 +144,7 @@ void star::Scanner::ScanToken()
         case '\t':
             break;
         case '\n':
+            AddToken(TokenType::NEWLINE);
             m_Line++;
             break;
         case '"':
@@ -503,7 +504,7 @@ size_t star::Scanner::GetCurrentColumn()
     return m_Start - m_LineBreaks[m_Line - 1]; 
 }
 
-star::Scanner::Scanner(const std::string& source, const std::string& filepath) : 
+star::Scanner::Scanner(const std::string& source, const std::string& filepath, const IndentationPattern& indentationPattern) : 
     m_Source(source), m_Filepath(filepath),
     m_Start(0), m_Current(0), m_Line(1),
     m_HexProcessor{star_definitions::s_HexRegex},
@@ -513,7 +514,8 @@ star::Scanner::Scanner(const std::string& source, const std::string& filepath) :
     m_IdentProcessor{star_definitions::s_IdentifierRegex},
     m_LCProcessor{star_definitions::s_CommentRegex},
     m_MLCProcessor{star_definitions::s_MultilineCommentRegex},
-    m_NumberInitIdentProcessor{R"()"}
+    m_NumberInitIdentProcessor{R"()"},
+	m_IndentProcessor{ R"()" }
 {
     m_LineBreaks.push_back(0);
     for(size_t i = 0; i < m_Source.length(); i++)

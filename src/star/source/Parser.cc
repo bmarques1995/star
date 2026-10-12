@@ -56,7 +56,8 @@ std::vector<std::shared_ptr<star::Statement::Stmt>> star::Parser::Parse()
     std::vector<std::shared_ptr<star::Statement::Stmt>> statements;
     while (!IsAtEnd())
     {
-        statements.push_back(Declaration());
+        if (!Match(TokenType::NEWLINE))
+            statements.push_back(Declaration());
     }
     return statements;
 }
@@ -355,7 +356,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Statement()
 std::shared_ptr<star::Statement::Stmt> star::Parser::ExpressionStatement()
 {
     std::shared_ptr<Expression::Expr> expr = Expression();
-    Consume(TokenType::SEMICOLON, "Expected ; after value.");
+    Consume(TokenType::NEWLINE, "Expected newline (\\n) after value.");
     return std::make_shared<Statement::Expression>(expr);
 }
 
@@ -392,7 +393,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::VarDeclaration()
     {
         init = Expression();
     }
-    Consume(TokenType::SEMICOLON, "Expected ; after variable declaration.");
+    Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
 	return std::make_shared<Statement::Variable>(name, init, type);
 }
 
@@ -402,7 +403,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
     std::shared_ptr<Expression::Expr> init = nullptr;
     Consume(TokenType::EQUAL, "Auto declaration requires an initializer.");
     init = Expression();
-    Consume(TokenType::SEMICOLON, "Expected ; after variable declaration.");
+    Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
     return std::make_shared<Statement::Auto>(name, init);
 }
 
@@ -518,11 +519,11 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ReturnStatement()
 {
 	Token keyword = Previous();
 	std::shared_ptr<Expression::Expr> value = nullptr;
-	if (!Check(TokenType::SEMICOLON))
+	if (!Check(TokenType::NEWLINE))
 	{
 		value = Expression();
 	}
-	Consume(TokenType::SEMICOLON, "Expected ; after return value.");
+	Consume(TokenType::NEWLINE, "Expected newline (\\n) after return value.");
 	return std::make_shared<Statement::Return>(keyword, value);
 }
 
@@ -649,7 +650,7 @@ void star::Parser::Synchronize()
     Advance();
     while(!IsAtEnd())
     {
-        if(Previous().m_Type == TokenType::SEMICOLON) return;
+        if(Previous().m_Type == TokenType::NEWLINE) return;
         switch (Peek().m_Type)
         {
             case TokenType::CLASS:

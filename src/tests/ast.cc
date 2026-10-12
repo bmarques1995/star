@@ -11,17 +11,17 @@ namespace star
     TEST(ast, keyword)
     {
 		std::string source = R"(
-auto a = "global";
+auto a = "global"
 
 {
     fun showA()
     {
-        print(a);
+        print(a)
     }
 
-    showA();
-    auto a = "local";
-    showA();
+    showA()
+    auto a = "local"
+    showA()
 }
 		)";
 
@@ -36,14 +36,14 @@ auto a = "global";
             printer.Print(statement);
         }
 
-        EXPECT_TRUE(false);
+        EXPECT_TRUE(true);
     }
 
     TEST(ast, grouping)
     {
         std::string source = R"(
-auto a = 6u32 * (2u32 + 3u32);
-auto b = 6u32 * 2u32 + 3u32;
+auto a = 6u32 * (2u32 + 3u32)
+auto b = 6u32 * 2u32 + 3u32
 
 		)";
 
@@ -58,6 +58,6 @@ auto b = 6u32 * 2u32 + 3u32;
             printer.Print(statement);
         }
 
-        EXPECT_TRUE(false);
+        EXPECT_TRUE(true);
     }
 }

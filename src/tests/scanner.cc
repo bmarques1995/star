@@ -27,7 +27,7 @@ like this:
 var x = 10;)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 1);
+        EXPECT_TRUE(tokens.size() == 2);
     }
 
     TEST(scanner, closed_multiline_comment)
@@ -42,15 +42,16 @@ var x = 10;)";
     TEST(scanner, variable_naming_matching_test)
     {
         std::string input = R"(/* These are some variables */
-var x = 10.5;
-var y = 20;
-var y3 = 20.3e-8f32;
-var y4 = .3e-8f32;
-var _y = 20u64;
-var z = 30;)";
+var x = 10.5
+var y = 20
+var y3 = 20.3e-8f32
+var y4 = .3e-8f32
+var _y = 20u64
+var z = 30
+)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 31);
+        EXPECT_TRUE(tokens.size() == 33);
     }
 
     TEST(scanner, variable_naming_non_matching_test)
@@ -65,7 +66,7 @@ var z = 30;)";
         std::string input = R"(0x1A3F 0X64ae)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 3);
+        EXPECT_TRUE(tokens.size() == 4);
     }
 
     TEST(scanner, float_test)
@@ -73,7 +74,7 @@ var z = 30;)";
         std::string input = R"(.7e8 5.7e6f64)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 3);
+        EXPECT_TRUE(tokens.size() == 4);
     }
 
     TEST(scanner, test_token_set)
@@ -81,16 +82,19 @@ var z = 30;)";
         std::string input = R"(( ) { } [ ] , . + - * / % += -= *= /= %= == != < > <= >= ! = ;)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 28);
+        EXPECT_TRUE(tokens.size() == 29);
     }
 
     TEST(scanner, test_single_line_comment)
     {
         std::string input = R"(// This is a single line comment
-var x = 10;)";
+var x = 10
+var y = 20 // This is another single line comment
+var z = 30
+)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 6);
+        EXPECT_TRUE(tokens.size() == 18);
     }
 
     TEST(scanner, test_invalid_hex)

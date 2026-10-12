@@ -20,6 +20,13 @@ namespace star
         ~ScannerException() = default;
     };
 
+	enum class IndentationPattern
+	{
+		TAB,
+		SPACE_2,
+		SPACE_4
+	};
+
     class STAR_API Scanner
     {
     private:
@@ -70,7 +77,7 @@ namespace star
 
         size_t GetCurrentColumn();
     public:
-        Scanner(const std::string& source, const std::string& filepath = "::repl");
+        Scanner(const std::string& source, const std::string& filepath = "::repl", const IndentationPattern& indentationPattern = IndentationPattern::SPACE_4);
         bool IsAtEnd(size_t offset = 0);
         const std::vector<Token>& ScanTokens();
 
@@ -86,5 +93,6 @@ namespace star
         RegexProcessor m_FloatProcessor;
         RegexProcessor m_IsFloat;
         RegexProcessor m_NumberInitIdentProcessor;
+		RegexProcessor m_IndentProcessor;
     };
 }
