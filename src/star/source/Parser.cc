@@ -349,7 +349,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Statement()
     //if(Match(TokenType::TRY)) return TryStatement();
     //if(Match(TokenType::THROW)) return ThrowStatement();
     //if(Match(TokenType::FOREACH)) return ForEachStatement();
-	if(Match(TokenType::LEFT_BRACE)) return std::make_shared<Statement::Block>(Block());
+	if(Match(TokenType::INDENT)) return std::make_shared<Statement::Block>(Block());
     else return ExpressionStatement();
 }
 
@@ -410,10 +410,10 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
 std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
 {
     Token name = Consume(TokenType::IDENTIFIER, "Expected class name.");
-	Consume(TokenType::LEFT_BRACE, "Expected '{' after class name.");
+	Consume(TokenType::INDENT, "Expected '{' after class name.");
     std::vector<std::shared_ptr<Statement::Function>> methods;
 	std::vector<std::shared_ptr<Statement::Stmt>> fields;
-	while (!Check(TokenType::RIGHT_BRACE) && !IsAtEnd())
+	while (!Check(TokenType::UNINDENT) && !IsAtEnd())
 	{
         bool resolved = Check(TokenType::FUN) || Check(TokenType::VAR) || Check(TokenType::AUTO);
         if (Match(TokenType::FUN))
@@ -434,7 +434,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
         if(!resolved)
             throw ParserException("Expected method or field.");
 	}
-	Consume(TokenType::RIGHT_BRACE, "Expected '}' after class.");
+	Consume(TokenType::UNINDENT, "Expected '}' after class.");
 
     return std::make_shared<Statement::Class>(name, std::move(methods), std::move(fields));
 }
@@ -442,11 +442,12 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
 std::vector<std::shared_ptr<star::Statement::Stmt>> star::Parser::Block()
 {
     std::vector<std::shared_ptr<Statement::Stmt>> statements;
-	while (!Check(TokenType::RIGHT_BRACE) && !IsAtEnd())
+	while (!Check(TokenType::UNINDENT) && !IsAtEnd())
 	{
-		statements.push_back(Declaration());
+        if(!Match(TokenType::NEWLINE))
+		    statements.push_back(Declaration());
 	}
-	Consume(TokenType::RIGHT_BRACE, "Expected '}' after block.");
+	Consume(TokenType::UNINDENT, "Expected '}' after block.");
     return statements;
 }
 
@@ -551,7 +552,8 @@ std::shared_ptr<star::Statement::Function> star::Parser::Function(const Function
     }
     Consume(TokenType::RIGHT_PAREN, "Expected ')' after function name.");
 	VariableType returnType = MatchHashtag();
-    Consume(TokenType::LEFT_BRACE, "Expected '{' after function declaration.");
+	ConsumeNewline();
+    Consume(TokenType::INDENT, "Expected '{' after function declaration.");
     std::vector<std::shared_ptr<Statement::Stmt>> body = Block();
     return std::make_shared<Statement::Function>(functionName, parameters, body, kind == FunctionType::INITIALIZER ? VariableType::Void : returnType);
 }
@@ -665,4 +667,12 @@ void star::Parser::Synchronize()
         }
     }
     Advance();
+}
+
+void star::Parser::ConsumeNewline()
+{
+    while (Check(TokenType::NEWLINE))
+    {
+		Advance();
+    }
 }

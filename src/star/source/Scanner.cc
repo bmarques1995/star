@@ -9,6 +9,20 @@
 
 using match_range = std::pair<size_t, size_t>;
 
+const std::unordered_map<star::IndentationPattern, std::string> star::Scanner::s_IndentationPatterns =
+{
+    {IndentationPattern::TAB,     "^(\t+)"},
+    {IndentationPattern::SPACE_2, "^( {2})+"},
+    {IndentationPattern::SPACE_4, "^( {4})+"},
+};
+
+const std::unordered_map<star::IndentationPattern, size_t> star::Scanner::s_IndentationPatternsSize =
+{
+    {IndentationPattern::TAB, 1},
+    {IndentationPattern::SPACE_2, 2},
+    {IndentationPattern::SPACE_4, 4},
+};
+
 star::ScannerException::ScannerException(const std::string& reason, size_t line, size_t column, std::string filepath) : ScriptException()
 {
     std::stringstream lineInfo;
@@ -101,6 +115,8 @@ bool star::Scanner::Match(char expected)
 void star::Scanner::ScanToken()
 {
     char c = Advance();
+    if ((c != ' ') && (c != '\t') && (c != '\r') && IsAtLineStart())
+        EmitDedentZero();
     switch(c){
         case '(': AddToken(TokenType::LEFT_PAREN); break;
         case ')': AddToken(TokenType::RIGHT_PAREN); break;
@@ -140,8 +156,10 @@ void star::Scanner::ScanToken()
             ProcessSlash(c);
             break;
         case ' ':
-        case '\r':
         case '\t':
+            ProcessIndentation();
+			break;
+        case '\r':
             break;
         case '\n':
             AddToken(TokenType::NEWLINE);
@@ -263,6 +281,63 @@ void star::Scanner::ProcessDefault(char c)
     {
         size_t column = m_Current - m_LineBreaks[m_Line - 1];
         throw ScannerException(std::string("Unexpected character: ") + c, m_Line, column, m_Filepath);
+    }
+}
+
+void star::Scanner::ProcessIndentation()
+{
+#pragma warning "debug"
+    auto inst = this;
+    if(!IsAtLineStart())
+        return;
+    size_t initPos = m_Start;
+    size_t endPos = m_Start;
+    size_t identationPatternSize = s_IndentationPatternsSize.find(m_IndentationPattern)->second;
+    std::string_view currentProcessing;
+    InitCurrentProcessingString(&currentProcessing);
+    auto currentMatch = m_IndentProcessor.GetFirstMatch(currentProcessing);
+    bool foundIndentation = currentMatch.first != currentMatch.second;
+    if (!foundIndentation)
+        throw ScannerException("At the start of a line, you can only use spaces for indentation",
+            m_Line, GetCurrentColumn(), m_Filepath);
+    size_t matchesCount = currentMatch.second / identationPatternSize;
+    m_Current = m_Start;
+    
+    if (matchesCount == m_IndentationLevel)
+    {
+        m_Current += matchesCount * identationPatternSize;
+        m_Start = m_Current;
+    }
+
+    if (matchesCount > m_IndentationLevel)
+    {
+        m_Start += m_IndentationLevel * identationPatternSize;
+        for (size_t i = m_IndentationLevel; i < matchesCount; i++)
+        {
+            m_Current += (i + 1) * identationPatternSize;
+            AddToken(TokenType::INDENT);
+            m_Start = m_Current;
+        }
+        m_IndentationLevel = matchesCount;
+    }
+    
+    if (matchesCount < m_IndentationLevel)
+    {
+        for (size_t i = m_IndentationLevel; i > matchesCount; i--)
+        {
+            AddToken(TokenType::UNINDENT);
+        }
+        m_IndentationLevel = matchesCount;
+    }
+}
+
+void star::Scanner::EmitDedentZero()
+{
+    if (IsAtLineStart())
+    {
+        for (size_t i = 0; i < m_IndentationLevel; i++)
+            AddToken(TokenType::UNINDENT);
+        m_IndentationLevel = 0;
     }
 }
 
@@ -441,6 +516,11 @@ bool star::Scanner::ProcessFloat()
     return true;
 }
 
+bool star::Scanner::IsAtLineStart()
+{
+    return (m_LineBreaks[m_Line - 1] + 1) == m_Start;
+}
+
 void star::Scanner::Number()
 {
     char c = m_Source.at(m_Start);
@@ -515,7 +595,9 @@ star::Scanner::Scanner(const std::string& source, const std::string& filepath, c
     m_LCProcessor{star_definitions::s_CommentRegex},
     m_MLCProcessor{star_definitions::s_MultilineCommentRegex},
     m_NumberInitIdentProcessor{R"()"},
-	m_IndentProcessor{ R"()" }
+	m_IndentProcessor{ s_IndentationPatterns.find(indentationPattern)->second },
+	m_IndentationPattern{ indentationPattern },
+	m_IndentationLevel{ 0 }
 {
     m_LineBreaks.push_back(0);
     for(size_t i = 0; i < m_Source.length(); i++)

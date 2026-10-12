@@ -59,12 +59,16 @@ namespace star
         void ProcessSlash(char c);
         void ProcessDefault(char c);
 
+        void ProcessIndentation();
+        void EmitDedentZero();
+
         void ProcessComment();
         void ProcessMultilineComment();
 
         bool ProcessInteger();
         bool ProcessHex();
         bool ProcessFloat();
+        bool IsAtLineStart();
 
         char ProcessEscapedChar(char evaluated);
 
@@ -83,6 +87,8 @@ namespace star
 
         static const std::unordered_map<char, char> s_EscapeMap;
         static const std::unordered_map<char, char> s_ReverseEscapeMap;
+        static const std::unordered_map<IndentationPattern, std::string> s_IndentationPatterns;
+        static const std::unordered_map<IndentationPattern, size_t> s_IndentationPatternsSize;
 
     private:
         RegexProcessor m_LCProcessor;
@@ -94,5 +100,8 @@ namespace star
         RegexProcessor m_IsFloat;
         RegexProcessor m_NumberInitIdentProcessor;
 		RegexProcessor m_IndentProcessor;
+
+		size_t m_IndentationLevel = 0;
+        IndentationPattern m_IndentationPattern;
     };
 }

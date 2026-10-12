@@ -25,6 +25,7 @@ namespace star
         size_t current = 0;
 
         void Synchronize();
+		void ConsumeNewline();
 
         bool IsAtEnd();
         bool Check(const TokenType&);
