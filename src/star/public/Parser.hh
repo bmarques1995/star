@@ -55,11 +55,11 @@ namespace star
         std::shared_ptr<Expression::Expr> Call();
         std::shared_ptr<Expression::Expr> FinishCall(std::shared_ptr<Expression::Expr> callee);
 
-        std::shared_ptr<Statement::Stmt> Statement();
-        std::shared_ptr<Statement::Stmt> ExpressionStatement();
+        std::shared_ptr<Statement::Stmt> Statement(bool consumeNewline = true);
+        std::shared_ptr<Statement::Stmt> ExpressionStatement(bool consumeNewline = true);
         std::shared_ptr<Statement::Stmt> Declaration();
-        std::shared_ptr<Statement::Stmt> VarDeclaration();
-        std::shared_ptr<Statement::Stmt> AutoDeclaration();
+        std::shared_ptr<Statement::Stmt> VarDeclaration(bool consumeNewline = true);
+        std::shared_ptr<Statement::Stmt> AutoDeclaration(bool consumeNewline = true);
         std::shared_ptr<Statement::Stmt> ClassDeclaration();
 		std::vector<std::shared_ptr<Statement::Stmt>> Block();
 		std::shared_ptr<Statement::Stmt> IfStatement();

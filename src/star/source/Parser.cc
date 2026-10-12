@@ -336,7 +336,7 @@ std::shared_ptr<star::Expression::Expr> star::Parser::FinishCall(std::shared_ptr
 	return std::make_shared<Expression::Call>(callee, std::move(paren), arguments);
 }
 
-std::shared_ptr<star::Statement::Stmt> star::Parser::Statement()
+std::shared_ptr<star::Statement::Stmt> star::Parser::Statement(bool consumeNewline)
 {
     if(Match(TokenType::IF)) return IfStatement();
     if(Match(TokenType::RETURN)) return ReturnStatement();
@@ -350,13 +350,16 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Statement()
     //if(Match(TokenType::THROW)) return ThrowStatement();
     //if(Match(TokenType::FOREACH)) return ForEachStatement();
 	if(Match(TokenType::INDENT)) return std::make_shared<Statement::Block>(Block());
-    else return ExpressionStatement();
+    else return ExpressionStatement(consumeNewline);
 }
 
-std::shared_ptr<star::Statement::Stmt> star::Parser::ExpressionStatement()
+std::shared_ptr<star::Statement::Stmt> star::Parser::ExpressionStatement(bool consumeNewline)
 {
     std::shared_ptr<Expression::Expr> expr = Expression();
-    Consume(TokenType::NEWLINE, "Expected newline (\\n) after value.");
+    if (consumeNewline)
+    {
+        Consume(TokenType::NEWLINE, "Expected newline (\\n) after value.");
+    }
     return std::make_shared<Statement::Expression>(expr);
 }
 
@@ -364,6 +367,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Declaration()
 {
     try
     {
+		std::shared_ptr<star::Statement::Stmt> decl = nullptr;
         if(Match(TokenType::VAR)) return VarDeclaration();
         if(Match(TokenType::AUTO)) return AutoDeclaration();
 		//refactor this to use enums instead of strings
@@ -383,7 +387,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::Declaration()
     }
 }
 
-std::shared_ptr<star::Statement::Stmt> star::Parser::VarDeclaration()
+std::shared_ptr<star::Statement::Stmt> star::Parser::VarDeclaration(bool consumeNewline)
 {
     Token name = Consume(TokenType::IDENTIFIER, "Expected variable name.");
 
@@ -393,23 +397,30 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::VarDeclaration()
     {
         init = Expression();
     }
-    Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
+    if (consumeNewline)
+    {
+        Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
+    }
 	return std::make_shared<Statement::Variable>(name, init, type);
 }
 
-std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration()
+std::shared_ptr<star::Statement::Stmt> star::Parser::AutoDeclaration(bool consumeNewline)
 {
     Token name = Consume(TokenType::IDENTIFIER, "Expected variable name.");
     std::shared_ptr<Expression::Expr> init = nullptr;
     Consume(TokenType::EQUAL, "Auto declaration requires an initializer.");
     init = Expression();
-    Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
+    if (consumeNewline)
+    {
+        Consume(TokenType::NEWLINE, "Expected newline (\\n) after variable declaration.");
+    }
     return std::make_shared<Statement::Auto>(name, init);
 }
 
 std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
 {
     Token name = Consume(TokenType::IDENTIFIER, "Expected class name.");
+    ConsumeNewline();
 	Consume(TokenType::INDENT, "Expected '{' after class name.");
     std::vector<std::shared_ptr<Statement::Function>> methods;
 	std::vector<std::shared_ptr<Statement::Stmt>> fields;
@@ -441,6 +452,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ClassDeclaration()
 
 std::vector<std::shared_ptr<star::Statement::Stmt>> star::Parser::Block()
 {
+	ConsumeNewline();
     std::vector<std::shared_ptr<Statement::Stmt>> statements;
 	while (!Check(TokenType::UNINDENT) && !IsAtEnd())
 	{
@@ -456,6 +468,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::IfStatement()
     Consume(TokenType::LEFT_PAREN, "Expected '(' after 'if'.");
 	std::shared_ptr<Expression::Expr> condition = Expression();
 	Consume(TokenType::RIGHT_PAREN, "Expected ')' after condition.");
+	ConsumeNewline();
 	std::shared_ptr<Statement::Stmt> thenBranch = Statement();
 	std::shared_ptr<Statement::Stmt> elseBranch = nullptr;
 	if (Match(TokenType::ELSE))
@@ -483,13 +496,16 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ForStatement()
         init = nullptr;
     }
     else if (Match(TokenType::VAR)) {
-        init = VarDeclaration();
+        init = VarDeclaration(false);
+        Consume(TokenType::SEMICOLON, "Expected ';' after variable declaration.");
     }
     else if (Match(TokenType::AUTO)) {
-        init = AutoDeclaration();
+        init = AutoDeclaration(false);
+        Consume(TokenType::SEMICOLON, "Expected ';' after auto declaration.");
     }
     else {
-        init = ExpressionStatement();
+        init = ExpressionStatement(false);
+        Consume(TokenType::SEMICOLON, "Expected ';' after expression.");
     }
 
     std::shared_ptr<Expression::Expr> condition = nullptr;
@@ -504,6 +520,7 @@ std::shared_ptr<star::Statement::Stmt> star::Parser::ForStatement()
         lastCommand = std::make_shared<Statement::Expression>(expr);
     }
     Consume(TokenType::RIGHT_PAREN, "Expected ')' after loop condition.");
+    ConsumeNewline();
 
     std::shared_ptr<Statement::Stmt> body = Statement();
 
