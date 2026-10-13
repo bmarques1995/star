@@ -10,20 +10,7 @@ namespace star
 {
     TEST(ast, keyword)
     {
-		std::string source = R"(
-auto a = "global"
-
-{
-    fun showA()
-    {
-        print(a)
-    }
-
-    showA()
-    auto a = "local"
-    showA()
-}
-		)";
+		std::string source = "auto a = \"global\"\n    fun showA()\n        print(a)\n    showA()\n    auto a = \"local\"\n    showA()\n";
 
 		Scanner scanner(source);
 		auto tokens = scanner.ScanTokens();
@@ -45,7 +32,7 @@ auto a = "global"
 auto a = 6u32 * (2u32 + 3u32)
 auto b = 6u32 * 2u32 + 3u32
 
-		)";
+)";
 
         Scanner scanner(source);
         auto tokens = scanner.ScanTokens();

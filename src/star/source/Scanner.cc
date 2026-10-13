@@ -115,7 +115,7 @@ bool star::Scanner::Match(char expected)
 void star::Scanner::ScanToken()
 {
     char c = Advance();
-    if ((c != ' ') && (c != '\t') && (c != '\r') && IsAtLineStart())
+    if ((c != ' ') && (c != '\t') && (c != '\r') && (c != '\n') && IsAtLineStart())
         EmitDedentZero();
     switch(c){
         case '(': AddToken(TokenType::LEFT_PAREN); break;
@@ -333,12 +333,9 @@ void star::Scanner::ProcessIndentation()
 
 void star::Scanner::EmitDedentZero()
 {
-    if (IsAtLineStart())
-    {
-        for (size_t i = 0; i < m_IndentationLevel; i++)
-            AddToken(TokenType::UNINDENT);
-        m_IndentationLevel = 0;
-    }
+    for (size_t i = 0; i < m_IndentationLevel; i++)
+        AddToken(TokenType::UNINDENT);
+    m_IndentationLevel = 0;
 }
 
 void star::Scanner::ProcessComment()
@@ -620,6 +617,7 @@ const std::vector<star::Token>& star::Scanner::ScanTokens()
         ScanToken();
     }
 
+	EmitDedentZero();
     m_Tokens.emplace_back(TokenType::ST_EOF, "", m_Line + 1, 0, m_Filepath);
     return m_Tokens;
 }

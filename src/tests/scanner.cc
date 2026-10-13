@@ -79,10 +79,33 @@ var z = 30
 
     TEST(scanner, test_token_set)
     {
-        std::string input = R"(( ) { } [ ] , . + - * / % += -= *= /= %= == != < > <= >= ! = ;)";
+        std::string input = R"(()
+{}
+[]
+,
+.
++
+-
+*
+/
+%
++=
+-=
+*=
+/=
+%=
+==
+!=
+<
+>
+<=
+>=
+!
+=
+;)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
-        EXPECT_TRUE(tokens.size() == 29);
+        EXPECT_TRUE(tokens.size() == 52);
     }
 
     TEST(scanner, test_single_line_comment)
