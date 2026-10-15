@@ -338,6 +338,7 @@ std::shared_ptr<star::Expression::Expr> star::Parser::FinishCall(std::shared_ptr
 
 std::shared_ptr<star::Statement::Stmt> star::Parser::Statement(bool consumeNewline)
 {
+    ConsumeNewline();
     if(Match(TokenType::IF)) return IfStatement();
     if(Match(TokenType::RETURN)) return ReturnStatement();
 	if(Match(TokenType::WHILE)) return WhileStatement();
