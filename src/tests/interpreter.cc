@@ -32,7 +32,7 @@ namespace star
 	TEST(interpreter, expression)
 	{
 		/*
-		print(\"Hello String\");
+		print(\"Hello String\")
 		*/
 		std::vector<Token> tokens =
 		{
@@ -53,7 +53,7 @@ namespace star
 	TEST(interpreter, ternary_true_expression)
 	{
 		/*
-		print(4 < 5 ? 12 : 7);
+		print(4 < 5 ? 12 : 7)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -80,7 +80,7 @@ namespace star
 	TEST(interpreter, ternary_false_expression)
 	{
 		/*
-		print(4 > 5 ? 12 : 7);
+		print(4 > 5 ? 12 : 7)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -107,7 +107,7 @@ namespace star
 	TEST(interpreter, equal_equal_ternary)
 	{
 		/*
-		print(4 == 5 ? 12 : 7);
+		print(4 == 5 ? 12 : 7)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -134,7 +134,7 @@ namespace star
 	TEST(interpreter, bang_equal_ternary)
 	{
 		/*
-		print(4 != 5 ? 12 : 7);
+		print(4 != 5 ? 12 : 7)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -162,7 +162,7 @@ namespace star
 	TEST(interpreter, linear_expression)
 	{
 		/*
-		print(6 * 2 + 3);
+		print(6 * 2 + 3)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -187,7 +187,7 @@ namespace star
 	TEST(interpreter, grouped_expression)
 	{
 		/*
-		print(6 * (2 + 3));
+		print(6 * (2 + 3))
 		*/
 		std::vector<Token> tokens =
 		{
@@ -239,7 +239,7 @@ namespace star
 	TEST(interpreter, negate_false_expression)
 	{
 		/*
-		print(!false);
+		print(!false)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -261,7 +261,7 @@ namespace star
 	TEST(interpreter, negate_number)
 	{
 		/*
-		print(-5);
+		print(-5)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -283,7 +283,7 @@ namespace star
 	TEST(interpreter, template_string)
 	{
 		/*
-		print(`This is a template string, to prove, use these expressions: ${1995/35}$ and ${143-13}$`);
+		print(`This is a template string, to prove, use these expressions: ${1995/35}$ and ${143-13}$`)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -317,7 +317,7 @@ namespace star
 	TEST(interpreter, greater_tests)
 	{
 		/*
-		print(4 > 5 ? 4 > 5 : 5 > 4);
+		print(4 > 5 ? 4 > 5 : 5 > 4)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -348,7 +348,7 @@ namespace star
 	TEST(interpreter, greater_equal_tests)
 	{
 		/*
-		print(4 >= 5 ? 4 >= 5 : 5 >= 4);
+		print(4 >= 5 ? 4 >= 5 : 5 >= 4)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -379,7 +379,7 @@ namespace star
 	TEST(interpreter, less_tests)
 	{
 		/*
-		print(4 < 5 ? 5 < 4 : 4 < 5);
+		print(4 < 5 ? 5 < 4 : 4 < 5)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -410,7 +410,7 @@ namespace star
 	TEST(interpreter, less_equal_tests)
 	{
 		/*
-		print(4 <= 5 ? 5 <= 4 : 4 <= 5);
+		print(4 <= 5 ? 5 <= 4 : 4 <= 5)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -441,7 +441,7 @@ namespace star
 	TEST(interpreter, mod_tests)
 	{
 		/*
-		print(3%2);
+		print(3%2)
 		*/
 		std::vector<Token> tokens =
 		{
@@ -459,5 +459,146 @@ namespace star
 		MockInterpreter interpreter{};
 		interpreter.Interpret(expr).ToString();
 		EXPECT_EQ(interpreter.GetText(), "1");
+	}
+
+	TEST(interpreter, block_tests)
+	{
+		/*
+		auto a = 1u32
+		
+			auto a = 2u32
+			print(a)
+		
+		*/
+		std::vector<Token> tokens =
+		{
+		{ TokenType::AUTO ,"auto", 2, 1, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 2, 6, "::repl" },
+		{ TokenType::EQUAL ,"=", 2, 8, "::repl" },
+		{ TokenType::NUMBER ,"1u32", 2, 10, "::repl" },
+		{ TokenType::NEWLINE ,"\n", 2, 14, "::repl" },
+		{ TokenType::NEWLINE ,"\n", 3, 1, "::repl" },
+		{ TokenType::INDENT ,"    ", 4, 1, "::repl" },
+		{ TokenType::AUTO ,"auto", 4, 5, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 4, 10, "::repl" },
+		{ TokenType::EQUAL ,"=", 4, 12, "::repl" },
+		{ TokenType::NUMBER ,"2u32", 4, 14, "::repl" },
+		{ TokenType::NEWLINE, "\n", 4, 18, "::repl" },
+		{ TokenType::IDENTIFIER ,"print", 5, 5, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 5, 10, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 5, 11, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 5, 12, "::repl" },
+		{ TokenType::NEWLINE, "\n", 5, 13, "::repl" },
+		{ TokenType::NEWLINE, "\n", 6, 1, "::repl" },
+		{ TokenType::NEWLINE, "\n", 7, 1, "::repl" },
+		{ TokenType::NEWLINE, "\n", 8, 1, "::repl" },
+		{ TokenType::UNINDENT, "", 9, 0, "::repl" },
+		{ TokenType::ST_EOF, "", 10, 0, "::repl" },
+		};
+		Parser parser{ tokens };
+		auto statements = parser.Parse();
+		MockInterpreter interpreter{};
+		interpreter.Interpret(statements);
+		EXPECT_EQ(interpreter.GetText(), "2");
+	}
+
+	TEST(interpreter, if_false_test)
+	{
+		/*
+		auto a = 1u32
+
+		if (a % 2u32 == 0u32)
+			print("Even")
+
+		print(a)
+		*/
+
+		std::vector<Token> tokens =
+		{
+		{ TokenType::AUTO, "auto", 2, 1, "::repl" },
+		{ TokenType::IDENTIFIER, "a", 2, 6, "::repl" },
+		{ TokenType::EQUAL, "=", 2, 8, "::repl" },
+		{ TokenType::NUMBER, "1u32", 2, 10, "::repl" },
+		{ TokenType::NEWLINE, "\n", 2, 14, "::repl" },
+		{ TokenType::IF, "if", 3, 1, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 3, 4, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 3, 5, "::repl" },
+		{ TokenType::MOD ,"%", 3, 7, "::repl" },
+		{ TokenType::NUMBER ,"2u32", 3, 9, "::repl" },
+		{ TokenType::EQUAL_EQUAL ,"==", 3, 11, "::repl" },
+		{ TokenType::NUMBER ,"0u32", 3, 14, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 3, 15, "::repl" },
+		{ TokenType::NEWLINE, "\n", 3, 16, "::repl" },
+		{ TokenType::INDENT ,"    ", 4, 1, "::repl" },
+		{ TokenType::IDENTIFIER ,"print", 4, 5, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 4, 10, "::repl" },
+		{ TokenType::STRING ,"Even\n", 4, 11, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 4, 18, "::repl" },
+		{ TokenType::NEWLINE, "\n", 4, 19, "::repl" },
+		{ TokenType::UNINDENT, "", 5, 1, "::repl" },
+		{ TokenType::IDENTIFIER ,"print", 5, 1, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 5, 6, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 5, 7, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 5, 8, "::repl" },
+		{ TokenType::NEWLINE, "\n", 5, 9, "::repl" },
+		{ TokenType::NEWLINE, "\n", 6, 1, "::repl" },
+		{ TokenType::ST_EOF ,"", 8, 0, "::repl" },
+		};
+		Parser parser{ tokens };
+		auto statements = parser.Parse();
+		MockInterpreter interpreter{};
+		interpreter.Interpret(statements);
+		EXPECT_EQ(interpreter.GetText(), "1");
+	}
+
+	TEST(interpreter, if_true_test)
+	{
+		/*
+		auto a = 4u32
+
+		if (a % 2u32 == 0u32)
+			print("Even")
+
+		print(a)
+		*/
+		std::vector<Token> tokens =
+		{
+		{ TokenType::AUTO, "auto", 1, 0, "::repl" },
+		{ TokenType::IDENTIFIER, "a", 1, 5, "::repl" },
+		{ TokenType::EQUAL, "=", 1, 7, "::repl" },
+		{ TokenType::NUMBER, "4u32", 1, 9, "::repl" },
+		{ TokenType::NEWLINE, "\n", 1, 13, "::repl" },
+		{ TokenType::IF ,"if", 2, 1, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 2, 4, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 2, 5, "::repl" },
+		{ TokenType::MOD ,"%", 2, 7, "::repl" },
+		{ TokenType::NUMBER ,"2u32", 2, 9, "::repl" },
+		{ TokenType::EQUAL_EQUAL ,"==", 2, 14, "::repl" },
+		{ TokenType::NUMBER ,"0u32", 2, 17, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 2, 21, "::repl" },
+		{ TokenType::NEWLINE, "\n", 2, 22, "::repl" },
+		{ TokenType::INDENT ,"    ", 3, 1, "::repl" },
+		{ TokenType::IDENTIFIER, "print", 3, 5, "::repl" },
+		{ TokenType::LEFT_PAREN, "(", 3, 10, "::repl" },
+		{ TokenType::STRING ,"Even\n", 3, 11, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 3, 18, "::repl" },
+		{ TokenType::NEWLINE, "\n", 3, 19, "::repl" },
+		{ TokenType::UNINDENT ,"p", 4, 1, "::repl" },
+		{ TokenType::IDENTIFIER ,"print", 4, 1, "::repl" },
+		{ TokenType::LEFT_PAREN ,"(", 4, 6, "::repl" },
+		{ TokenType::IDENTIFIER ,"a", 4, 7, "::repl" },
+		{ TokenType::RIGHT_PAREN ,")", 4, 8, "::repl" },
+		{ TokenType::NEWLINE, "", 4, 9, "::repl" },
+		{ TokenType::NEWLINE, "\n", 5, 1, "::repl" },
+		{ TokenType::ST_EOF, "", 7, 0, "::repl" },
+		};
+		/*std::cout << "std::vector<Token> tokens = \n{\n";
+		for (auto& token : tokens) std::cout << token.StringSerialize() << "," << std::endl;
+		std::cout << "};\n";*/
+		Parser parser{ tokens };
+		auto statements = parser.Parse();
+		MockInterpreter interpreter{};
+		interpreter.Interpret(statements);
+		EXPECT_EQ(interpreter.GetText(), "Even\n4");
 	}
 }

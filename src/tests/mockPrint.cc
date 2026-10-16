@@ -1,4 +1,5 @@
 #include "mockPrint.hh"
+#include <sstream>
 
 star::MockPrint::MockPrint(std::string* outBuffer) 
 	: m_Arity(1), m_OutBuffer(outBuffer)
@@ -17,7 +18,8 @@ std::string star::MockPrint::ToString() const
 
 star::Value star::MockPrint::Call(Interpreter& m_Interpreter, std::vector<Value> args)
 {
-
-    *m_OutBuffer = args[0].ToString();
+	std::stringstream ss;
+	ss << *m_OutBuffer << args[0].ToString();
+    *m_OutBuffer = ss.str();
 	return {TokenType::VOID, ""};
 }

@@ -14,7 +14,7 @@ namespace star
 
     TEST(scanner, correct_string)
     {
-        std::string input = "var lang = \"something\";";
+        std::string input = "var lang = \"something\"\n";
         Scanner scanner(input);
         EXPECT_NO_THROW(scanner.ScanTokens());
     }
@@ -24,7 +24,8 @@ namespace star
         std::string input = R"(/* This is a non-closed multiline comment
 you can even write code here and it will be ignored
 like this: 
-var x = 10;)";
+var x = 10
+)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
         EXPECT_TRUE(tokens.size() == 2);
@@ -33,7 +34,8 @@ var x = 10;)";
     TEST(scanner, closed_multiline_comment)
     {
         std::string input = R"(/* This is a closed multiline comment */
-var x = 10;)";
+var x = 10
+)";
         Scanner scanner(input);
         auto tokens = scanner.ScanTokens();
         EXPECT_TRUE(tokens.size() > 1);
