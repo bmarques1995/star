@@ -19,7 +19,7 @@ std::string star::MockPrint::ToString() const
 star::Value star::MockPrint::Call(Interpreter& m_Interpreter, std::vector<Value> args)
 {
 	std::stringstream ss;
-	ss << *m_OutBuffer << args[0].ToString();
+	ss << *m_OutBuffer << args[0].ToString() << "\n";
     *m_OutBuffer = ss.str();
 	return {TokenType::VOID, ""};
 }
