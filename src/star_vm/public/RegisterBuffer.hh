@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StarVMMacro.hh"
-#include <cstdint>
+#include <cstdlib>
 #include "RegisterName.hh"
 
 namespace star
